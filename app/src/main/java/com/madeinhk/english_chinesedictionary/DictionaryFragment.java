@@ -3,14 +3,17 @@ package com.madeinhk.english_chinesedictionary;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.AsyncTaskCompat;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -100,7 +103,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         } else if (getArguments() != null) {
             searchWord = getArguments().getString(ARG_WORD);
         }
-        executeQuery(searchWord);
+        executeQueryTask(searchWord);
     }
 
     @Override
@@ -181,11 +184,21 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         super.onDestroy();
     }
 
-    private void executeQuery(String query) {
-        Word word = mECDictionary.lookup(query);
-        buildHtmlFromDictionary(word);
-    }
 
+    private void executeQueryTask(String query) {
+        new AsyncTask<String, Void, Word>() {
+            @Override
+            protected Word doInBackground(String... params) {
+                String query = params[0];
+                return mECDictionary.lookup(query);
+            }
+
+            @Override
+            protected void onPostExecute(Word word) {
+                buildHtmlFromDictionary(word);
+            }
+        }.execute(query);
+    }
 
     private void appendStyled(SpannableStringBuilder builder, String str, Object... spans) {
         builder.append(str);

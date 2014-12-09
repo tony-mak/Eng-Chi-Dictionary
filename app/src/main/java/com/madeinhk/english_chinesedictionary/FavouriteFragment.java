@@ -24,6 +24,7 @@ public class FavouriteFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private View mEmptyView;
 
     public FavouriteFragment() {
 
@@ -57,6 +58,8 @@ public class FavouriteFragment extends Fragment {
         mAdapter = new MyAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mEmptyView = view.findViewById(R.id.empty_view);
         return view;
     }
 
@@ -66,6 +69,15 @@ public class FavouriteFragment extends Fragment {
         ECDictionary ecDictionary = new ECDictionary(getActivity().getApplicationContext());
         mAdapter.setData(ecDictionary.getAllFavouriteWords());
         mAdapter.notifyDataSetChanged();
+        showHideEmptyView();
+    }
+
+    private void showHideEmptyView() {
+        if (mAdapter.getItemCount() > 0) {
+            mEmptyView.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
 

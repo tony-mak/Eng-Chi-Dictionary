@@ -18,7 +18,7 @@
             android:id="@+id/word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lookup a word now!"
+            android:text=""
             android:textColor="@color/primary_text_default_material_light"
             android:textSize="@dimen/abc_text_size_headline_material" />
 
@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:textColor="@color/primary_text_default_material_light"
+        android:layout_marginTop="10dp"
         android:textSize="@dimen/abc_text_size_body_1_material" />
 
 </LinearLayout>

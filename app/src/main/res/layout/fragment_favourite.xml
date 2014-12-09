@@ -4,6 +4,27 @@
     android:layout_height="match_parent"
     tools:context="com.madeinhk.english_chinesedictionary.FavouriteFragment">
 
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_empty_fav" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#8000"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/try_to_save_some_word" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
