@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
 
@@ -32,7 +33,7 @@ public class DictionaryActivity extends ActionBarActivity {
     private static interface PagePos {
         public static final int DICTIONARY = 0;
         public static final int FAVOURITE = 1;
-        public static final int SETTING = 2;
+        public static final int ABOUT = 2;
     }
 
     private static final String TAG = "DictionaryActivity";
@@ -40,7 +41,7 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private static final String DEFAULT_WORD = "welcome";
 
-    private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Favourite"};
+    private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Favourite", "About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private boolean mIsVisible = false;
@@ -116,6 +117,8 @@ public class DictionaryActivity extends ActionBarActivity {
                     case PagePos.FAVOURITE:
                         fragment = FavouriteFragment.newInstance();
                         break;
+                    case PagePos.ABOUT:
+                        fragment = new AboutFragment();
                 }
                 selectDrawerItem(i);
                 showFragment(fragment);
