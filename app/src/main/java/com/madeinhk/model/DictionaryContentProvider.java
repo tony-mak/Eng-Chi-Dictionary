@@ -9,6 +9,7 @@ import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 /**
@@ -60,10 +61,11 @@ public class DictionaryContentProvider extends ContentProvider {
         int code = sUriMatcher.match(uri);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String table = TABLE_NAMES.get(code);
+
         switch (code) {
             case BY_WORD:
                 String word = uri.getLastPathSegment();
-                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=?", new String[]{word}, null, null, sortOrder);
+                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=? COLLATE NOCASE", new String[]{word}, null, null, sortOrder);
             case BY_ID:
                 String id = uri.getLastPathSegment();
                 return db.query(table, projection, ECDictionary.COLUMNS._ID + "=?", new String[]{id}, null, null, sortOrder);

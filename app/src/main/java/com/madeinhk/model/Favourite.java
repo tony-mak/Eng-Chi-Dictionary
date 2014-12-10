@@ -25,7 +25,7 @@ public class Favourite {
 
     private Favourite(int id, String word) {
         mId = id;
-        mWord = word.toLowerCase();
+        mWord = word;
     }
 
     public ContentValues toContentValues() {
