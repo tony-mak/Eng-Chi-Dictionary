@@ -41,7 +41,7 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private static final String DEFAULT_WORD = "welcome";
 
-    private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Favourite", "About"};
+    private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private boolean mIsVisible = false;
