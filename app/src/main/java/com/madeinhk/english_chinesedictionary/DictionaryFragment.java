@@ -214,7 +214,10 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             if (mFavouriteItem != null) {
                 mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R.drawable.ic_star_outline_white_48dp);
                 mFavouriteItem.setChecked(alreadyMarked);
+                mFavouriteItem.setVisible(true);
             }
+        } else {
+            mFavouriteItem.setVisible(false);
         }
     }
 
