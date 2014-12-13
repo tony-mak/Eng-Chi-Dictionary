@@ -3,17 +3,12 @@ package com.madeinhk.english_chinesedictionary;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.AsyncQueryHandler;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.AsyncTaskCompat;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -32,8 +27,6 @@ import android.widget.TextView;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Locale;
@@ -116,11 +109,13 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -286,4 +281,17 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             outState.putString(SearchManager.QUERY, mWord.mWord);
         }
     }
+
+    public static class UpdateWordEvent {
+        public String mWord;
+        public UpdateWordEvent(String word) {
+            mWord = word;
+        }
+    }
+
+    public void onEvent(UpdateWordEvent event) {
+        String word = event.mWord;
+        executeQueryTask(word);
+    }
+
 }

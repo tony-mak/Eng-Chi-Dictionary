@@ -8,7 +8,7 @@ android {
         applicationId "com.madeinhk.english_chinesedictionary"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 7
+        versionCode 8
         versionName "0.1"
     }
     buildTypes {

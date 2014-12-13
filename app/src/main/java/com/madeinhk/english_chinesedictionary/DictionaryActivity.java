@@ -45,6 +45,7 @@ public class DictionaryActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private boolean mIsVisible = false;
+    private Fragment mTopFragment;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -89,6 +90,7 @@ public class DictionaryActivity extends ActionBarActivity {
     private void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = DictionaryActivity.this.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
+        mTopFragment = fragment;
     }
 
 
@@ -121,7 +123,9 @@ public class DictionaryActivity extends ActionBarActivity {
                         fragment = new AboutFragment();
                 }
                 selectDrawerItem(i);
-                showFragment(fragment);
+                if (!mTopFragment.getClass().equals(fragment.getClass())) {
+                    showFragment(fragment);
+                }
             }
         });
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -195,22 +199,25 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void handleIntent(Intent intent) {
-        Fragment fragment = null;
+        String word = DEFAULT_WORD;
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String word = intent.getStringExtra(SearchManager.QUERY);
-            fragment = DictionaryFragment.newInstance(word);
-            selectDrawerItem(PagePos.DICTIONARY);
+            word = intent.getStringExtra(SearchManager.QUERY);
         } else if (ACTION_VIEW_WORD.equals(intent.getAction())) {
             Uri data = intent.getData();
             ECDictionary ecDictionary = new ECDictionary(this);
-            String word = ecDictionary.lookupFromId(data.getLastPathSegment()).mWord;
-            fragment = DictionaryFragment.newInstance(word);
-            selectDrawerItem(PagePos.DICTIONARY);
-        } else {
-            fragment = DictionaryFragment.newInstance(DEFAULT_WORD);
-            selectDrawerItem(PagePos.DICTIONARY);
+            word = ecDictionary.lookupFromId(data.getLastPathSegment()).mWord;
         }
-        showFragment(fragment);
+        showWord(word);
+    }
+
+    private void showWord(String word) {
+        if (!(mTopFragment instanceof  DictionaryFragment)) {
+            Fragment fragment = DictionaryFragment.newInstance(word);
+            selectDrawerItem(PagePos.DICTIONARY);
+            showFragment(fragment);
+        } else {
+            EventBus.getDefault().post(new DictionaryFragment.UpdateWordEvent(word));
+        }
     }
 
 
