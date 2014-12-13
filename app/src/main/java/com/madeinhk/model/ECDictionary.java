@@ -65,6 +65,9 @@ public class ECDictionary {
     }
 
     public Word lookup(String word) {
+        if (word == null) {
+            return null;
+        }
         Word wordRet = null;
         try {
             Uri uri = sEngToChiUri.buildUpon().appendPath(word.toLowerCase()).build();

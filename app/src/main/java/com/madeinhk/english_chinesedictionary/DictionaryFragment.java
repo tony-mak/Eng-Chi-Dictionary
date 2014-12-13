@@ -217,9 +217,9 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     }
 
     private void buildHtmlFromDictionary(Word word) {
+        mWord = word;
+        updateFavouriteMenuItem(word);
         if (word != null) {
-            mWord = word;
-            updateFavouriteMenuItem(word);
             mWordTextView.setText(word.mWord);
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
             SpannableStringBuilder builder = new SpannableStringBuilder();
@@ -284,6 +284,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
     public static class UpdateWordEvent {
         public String mWord;
+
         public UpdateWordEvent(String word) {
             mWord = word;
         }
