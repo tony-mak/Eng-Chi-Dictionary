@@ -200,7 +200,7 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private void handleIntent(Intent intent) {
         String word = DEFAULT_WORD;
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()) || "com.google.android.gms.actions.SEARCH_ACTION".equals(intent.getAction())) {
             word = intent.getStringExtra(SearchManager.QUERY);
         } else if (ACTION_VIEW_WORD.equals(intent.getAction())) {
             Uri data = intent.getData();
@@ -211,7 +211,7 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void showWord(String word) {
-        if (!(mTopFragment instanceof  DictionaryFragment)) {
+        if (!(mTopFragment instanceof DictionaryFragment)) {
             Fragment fragment = DictionaryFragment.newInstance(word);
             selectDrawerItem(PagePos.DICTIONARY);
             showFragment(fragment);
