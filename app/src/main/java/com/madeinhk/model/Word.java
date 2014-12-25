@@ -1,7 +1,11 @@
 package com.madeinhk.model;
 
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +100,12 @@ public class Word {
         START, FIRST_SHARP, SECOND_SHARP, TYPE, DATA, END
     }
 
+    private static String decodeHtmlString(String str) {
+        return Html.fromHtml(str).toString();
+    }
+
     private static Map<Character, String> parseString(String str) {
+        str = decodeHtmlString(str);
         Map<Character, String> map = new HashMap<Character, String>();
         if (TextUtils.isEmpty(str)) {
             return map;
