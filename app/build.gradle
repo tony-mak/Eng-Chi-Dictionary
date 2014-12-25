@@ -27,5 +27,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:+'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.android.support:cardview-v7:+'
+    compile 'com.google.android.gms:play-services-base:+'
     compile project(':sqlite-assest-helper')
 }

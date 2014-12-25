@@ -1,5 +1,6 @@
 package com.madeinhk.english_chinesedictionary;
 
+import android.app.Application;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
@@ -62,8 +65,16 @@ public class DictionaryActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             handleIntent(getIntent());
+            trackLaunch();
         } else {
         }
+    }
+
+    private void trackLaunch() {
+        DictionaryApplication application = (DictionaryApplication) this.getApplication();
+        Tracker t = application.getTracker();
+        t.setScreenName("app_launch");
+        t.send(new HitBuilders.AppViewBuilder().build());
     }
 
     @Override
