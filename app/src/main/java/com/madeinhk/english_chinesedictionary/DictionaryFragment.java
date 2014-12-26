@@ -185,7 +185,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             @Override
             protected Word doInBackground(String... params) {
                 String query = params[0];
-                return mECDictionary.lookup(query);
+                return mECDictionary.lookup(query.toLowerCase());
             }
 
             @Override

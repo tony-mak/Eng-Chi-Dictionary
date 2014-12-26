@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
+import com.madeinhk.utils.Stemmer;
 
 public class ClipboardService extends Service {
     private boolean mRegistered = false;
@@ -57,11 +58,36 @@ public class ClipboardService extends Service {
             CharSequence text = item.getText();
             if (text != null) {
                 ECDictionary dictionary = new ECDictionary(ClipboardService.this);
-                Word word = dictionary.lookup(text.toString());
+                String str = text.toString().toLowerCase();
+                Word word = dictionary.lookup(str);
+                if (word == null && isEnglishWord(str)) {
+                    // Try to have stemming
+                    Stemmer stemmer = new Stemmer();
+                    stemmer.add(str.toCharArray(), str.length());
+                    stemmer.stem();
+                    word = dictionary.lookup(stemmer.toString());
+                }
                 if (word != null) {
-                    Toast.makeText(ClipboardService.this, word.mTypeEntry.get(0).mMeaning, Toast.LENGTH_LONG).show();
+                    showToast(word);
                 }
             }
+
+        }
+
+        private void showToast(Word word) {
+            Toast.makeText(ClipboardService.this, word.mTypeEntry.get(0).mMeaning, Toast.LENGTH_LONG).show();
+        }
+
+        private boolean isEnglishWord(String text) {
+            char[] chars = text.toCharArray();
+            boolean isEnglish = true;
+            for (int i = 0 ; i < chars.length; i++) {
+                if (!Character.isLetter(chars[i])) {
+                    isEnglish = false;
+                    break;
+                }
+            }
+            return isEnglish;
         }
     };
 

@@ -70,7 +70,7 @@ public class ECDictionary {
         }
         Word wordRet = null;
         try {
-            Uri uri = sEngToChiUri.buildUpon().appendPath(word.toLowerCase()).build();
+            Uri uri = sEngToChiUri.buildUpon().appendPath(word).build();
             Cursor cursor = mProviderClient.query(uri, null, null, null, null);
             boolean valid = cursor.moveToFirst();
             if (!valid) {
