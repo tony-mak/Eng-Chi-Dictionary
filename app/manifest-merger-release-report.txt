@@ -17,92 +17,121 @@ uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
 ADDED from AndroidManifest.xml:5:5
 	android:name
 		ADDED from AndroidManifest.xml:5:22
-application
+uses-permission#android.permission.INTERNET
 ADDED from AndroidManifest.xml:6:5
-MERGED from com.android.support:appcompat-v7:21.0.2:16:5
-MERGED from com.android.support:support-v4:21.0.2:16:5
+	android:name
+		ADDED from AndroidManifest.xml:6:22
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from AndroidManifest.xml:7:5
+	android:name
+		ADDED from AndroidManifest.xml:7:22
+application
+ADDED from AndroidManifest.xml:9:5
+MERGED from com.android.support:appcompat-v7:21.0.3:16:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.melnykov:floatingactionbutton:1.1.0:12:5
-MERGED from com.android.support:recyclerview-v7:21.0.2:17:5
-MERGED from com.android.support:support-v4:21.0.2:16:5
-MERGED from com.android.support:recyclerview-v7:21.0.2:17:5
-MERGED from com.android.support:support-v4:21.0.2:16:5
-MERGED from com.android.support:cardview-v7:21.0.2:16:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.android.support:cardview-v7:21.0.3:16:5
+MERGED from com.google.android.gms:play-services-base:6.5.87:20:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
-		ADDED from AndroidManifest.xml:10:9
+		ADDED from AndroidManifest.xml:13:9
 	android:allowBackup
-		ADDED from AndroidManifest.xml:8:9
-	android:icon
-		ADDED from AndroidManifest.xml:9:9
-	android:theme
 		ADDED from AndroidManifest.xml:11:9
+	android:icon
+		ADDED from AndroidManifest.xml:12:9
+	android:theme
+		ADDED from AndroidManifest.xml:14:9
 	android:name
-		ADDED from AndroidManifest.xml:7:9
-activity#com.madeinhk.english_chinesedictionary.DictionaryActivity
-ADDED from AndroidManifest.xml:13:9
-	android:label
-		ADDED from AndroidManifest.xml:15:13
+		ADDED from AndroidManifest.xml:10:9
+meta-data#com.google.android.gms.version
+ADDED from AndroidManifest.xml:15:9
+MERGED from com.google.android.gms:play-services-base:6.5.87:21:9
 	android:name
-		ADDED from AndroidManifest.xml:14:13
-	android:launchMode
 		ADDED from AndroidManifest.xml:16:13
+	android:value
+		ADDED from AndroidManifest.xml:17:13
+activity#com.madeinhk.english_chinesedictionary.DictionaryActivity
+ADDED from AndroidManifest.xml:18:9
+	android:label
+		ADDED from AndroidManifest.xml:20:13
+	android:name
+		ADDED from AndroidManifest.xml:19:13
+	android:launchMode
+		ADDED from AndroidManifest.xml:21:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:17:13
+ADDED from AndroidManifest.xml:22:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:18:17
+ADDED from AndroidManifest.xml:23:17
 	android:name
-		ADDED from AndroidManifest.xml:18:25
+		ADDED from AndroidManifest.xml:23:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:19:17
+ADDED from AndroidManifest.xml:24:17
 	android:name
-		ADDED from AndroidManifest.xml:19:27
+		ADDED from AndroidManifest.xml:24:27
 intent-filter#android.intent.action.SEARCH
-ADDED from AndroidManifest.xml:21:13
+ADDED from AndroidManifest.xml:26:13
 action#android.intent.action.SEARCH
-ADDED from AndroidManifest.xml:22:17
+ADDED from AndroidManifest.xml:27:17
 	android:name
-		ADDED from AndroidManifest.xml:22:25
+		ADDED from AndroidManifest.xml:27:25
+intent-filter#android.intent.category.DEFAULT+com.google.android.gms.actions.SEARCH_ACTION
+ADDED from AndroidManifest.xml:29:13
+action#com.google.android.gms.actions.SEARCH_ACTION
+ADDED from AndroidManifest.xml:30:17
+	android:name
+		ADDED from AndroidManifest.xml:30:25
+category#android.intent.category.DEFAULT
+ADDED from AndroidManifest.xml:31:17
+	android:name
+		ADDED from AndroidManifest.xml:31:27
 meta-data#android.app.searchable
-ADDED from AndroidManifest.xml:25:13
+ADDED from AndroidManifest.xml:34:13
 	android:resource
-		ADDED from AndroidManifest.xml:27:17
+		ADDED from AndroidManifest.xml:36:17
 	android:name
-		ADDED from AndroidManifest.xml:26:17
+		ADDED from AndroidManifest.xml:35:17
 provider#com.madeinhk.model.DictionaryContentProvider
-ADDED from AndroidManifest.xml:30:9
-	android:exported
-		ADDED from AndroidManifest.xml:33:13
-	android:authorities
-		ADDED from AndroidManifest.xml:32:13
-	android:name
-		ADDED from AndroidManifest.xml:31:13
-service#com.madeinhk.english_chinesedictionary.service.ClipboardService
-ADDED from AndroidManifest.xml:35:9
-	android:exported
-		ADDED from AndroidManifest.xml:37:13
-	android:name
-		ADDED from AndroidManifest.xml:36:13
-receiver#com.madeinhk.BootReceiver
 ADDED from AndroidManifest.xml:39:9
 	android:exported
+		ADDED from AndroidManifest.xml:42:13
+	android:authorities
 		ADDED from AndroidManifest.xml:41:13
 	android:name
 		ADDED from AndroidManifest.xml:40:13
-intent-filter#android.intent.action.BOOT_COMPLETED
-ADDED from AndroidManifest.xml:42:13
-action#android.intent.action.BOOT_COMPLETED
-ADDED from AndroidManifest.xml:43:17
+service#com.madeinhk.english_chinesedictionary.service.ClipboardService
+ADDED from AndroidManifest.xml:44:9
+	android:exported
+		ADDED from AndroidManifest.xml:46:13
 	android:name
-		ADDED from AndroidManifest.xml:43:25
+		ADDED from AndroidManifest.xml:45:13
+receiver#com.madeinhk.BootReceiver
+ADDED from AndroidManifest.xml:48:9
+	android:exported
+		ADDED from AndroidManifest.xml:50:13
+	android:name
+		ADDED from AndroidManifest.xml:49:13
+intent-filter#android.intent.action.BOOT_COMPLETED
+ADDED from AndroidManifest.xml:51:13
+action#android.intent.action.BOOT_COMPLETED
+ADDED from AndroidManifest.xml:52:17
+	android:name
+		ADDED from AndroidManifest.xml:52:25
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
-MERGED from com.android.support:appcompat-v7:21.0.2:15:5
-MERGED from com.android.support:support-v4:21.0.2:15:5
+MERGED from com.android.support:appcompat-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.melnykov:floatingactionbutton:1.1.0:8:5
-MERGED from com.android.support:recyclerview-v7:21.0.2:15:5
-MERGED from com.android.support:support-v4:21.0.2:15:5
-MERGED from com.android.support:recyclerview-v7:21.0.2:15:5
-MERGED from com.android.support:support-v4:21.0.2:15:5
-MERGED from com.android.support:cardview-v7:21.0.2:15:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.android.support:cardview-v7:21.0.3:15:5
+MERGED from com.google.android.gms:play-services-base:6.5.87:18:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from Eng-Chi-Dictionary:sqlite-assest-helper:unspecified:7:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
@@ -111,9 +140,9 @@ MERGED from Eng-Chi-Dictionary:sqlite-assest-helper:unspecified:7:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 activity#android.support.v7.widget.TestActivity
-ADDED from com.android.support:recyclerview-v7:21.0.2:18:9
-MERGED from com.android.support:recyclerview-v7:21.0.2:18:9
+ADDED from com.android.support:recyclerview-v7:21.0.3:18:9
+MERGED from com.android.support:recyclerview-v7:21.0.3:18:9
 	android:label
-		ADDED from com.android.support:recyclerview-v7:21.0.2:18:19
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:19
 	android:name
-		ADDED from com.android.support:recyclerview-v7:21.0.2:18:60
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:60
