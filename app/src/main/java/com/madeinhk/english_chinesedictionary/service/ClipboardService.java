@@ -6,8 +6,14 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.madeinhk.english_chinesedictionary.R;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
 import com.madeinhk.utils.Stemmer;
@@ -75,7 +81,16 @@ public class ClipboardService extends Service {
         }
 
         private void showToast(Word word) {
-            Toast.makeText(ClipboardService.this, word.mTypeEntry.get(0).mMeaning, Toast.LENGTH_LONG).show();
+            String meaning = word.mTypeEntry.get(0).mMeaning;
+            LayoutInflater inflater =  LayoutInflater.from(ClipboardService.this);
+            View layout = inflater.inflate(R.layout.toast_meaning, null);
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText(meaning);
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
         }
 
         private boolean isEnglishWord(String text) {
