@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">Englisch-Chinesisch Wörterbuch</string>
+	<string name="hello_world">Hallo Welt!</string>
+	<string name="action_settings">Einstellungen</string>
+	<string name="search_hint">Suche ein Wort</string>
+	<string name="drawer_open">Offene Navigation Schublade</string>
+	<string name="drawer_close">Enge Navigation Schublade</string>
+	<string name="hello_blank_fragment">Hallo leere fragment</string>
+	<string name="try_to_save_some_word">Versuchen Sie, einige Worte zu speichern!</string>
+
+</resources>

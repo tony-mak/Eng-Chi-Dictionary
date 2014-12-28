@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">英漢詞典</string>
+	<string name="hello_world">世界您好！</string>
+	<string name="action_settings">設置</string>
+	<string name="search_hint">查找一個單詞</string>
+	<string name="drawer_open">打開抽屜</string>
+	<string name="drawer_close">關閉抽屜</string>
+	<string name="hello_blank_fragment">你好空白片段</string>
+	<string name="try_to_save_some_word">嘗試保存一些單詞!</string>
+
+</resources>
