@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
@@ -93,8 +94,14 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             searchWord = savedInstanceState.getString(SearchManager.QUERY);
-        } else if (getArguments() != null) {
-            searchWord = getArguments().getString(ARG_WORD);
+        } else {
+            String lastWord = AppPreference.getKeyLastWord(mContext);
+            if (!TextUtils.isEmpty(lastWord)) {
+                searchWord = lastWord;
+            } else if (getArguments() != null) {
+                searchWord = getArguments().getString(ARG_WORD);
+
+            }
         }
         executeQueryTask(searchWord);
     }
@@ -238,6 +245,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             }
             mDetailTextView.setText(builder);
             mPronounceButton.setVisibility(View.VISIBLE);
+            AppPreference.saveLastWord(mContext, word.mWord);
         } else {
             mWordTextView.setText("No such word :(");
             mDetailTextView.setText("");
