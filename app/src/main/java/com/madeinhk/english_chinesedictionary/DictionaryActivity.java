@@ -175,6 +175,7 @@ public class DictionaryActivity extends ActionBarActivity {
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+        searchItem.expandActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
