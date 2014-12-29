@@ -28,6 +28,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
+import com.madeinhk.utils.Analytics;
 
 import de.greenrobot.event.EventBus;
 
@@ -65,16 +66,9 @@ public class DictionaryActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             handleIntent(getIntent());
-            trackLaunch();
+            Analytics.trackAppLaunch(this);
         } else {
         }
-    }
-
-    private void trackLaunch() {
-        DictionaryApplication application = (DictionaryApplication) this.getApplication();
-        Tracker t = application.getTracker();
-        t.setScreenName("app_launch");
-        t.send(new HitBuilders.AppViewBuilder().build());
     }
 
     @Override

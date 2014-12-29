@@ -41,8 +41,6 @@ public class DictionaryApplication extends Application {
                 Thread.getDefaultUncaughtExceptionHandler(),      // Current default uncaught exception handler.
                 this);                                         // Context of the application.
         Thread.setDefaultUncaughtExceptionHandler(myHandler);
-        GoogleAnalytics.getInstance(this).getLogger()
-                .setLogLevel(Logger.LogLevel.VERBOSE);
     }
 
     public Tracker getTracker() {
