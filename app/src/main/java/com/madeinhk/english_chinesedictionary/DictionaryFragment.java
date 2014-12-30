@@ -134,7 +134,6 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
         mWordTextView = (TextView) view.findViewById(R.id.word);
         mDetailTextView = (TextView) view.findViewById(R.id.detail);
-        mDetailTextView.setMovementMethod(new ScrollingMovementMethod());
         return view;
     }
 
