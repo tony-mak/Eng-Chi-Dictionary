@@ -95,12 +95,13 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         if (savedInstanceState != null) {
             searchWord = savedInstanceState.getString(SearchManager.QUERY);
         } else {
-            String lastWord = AppPreference.getKeyLastWord(mContext);
-            if (!TextUtils.isEmpty(lastWord)) {
-                searchWord = lastWord;
-            } else if (getArguments() != null) {
+            if (getArguments() != null) {
                 searchWord = getArguments().getString(ARG_WORD);
-
+            } else {
+                String lastWord = AppPreference.getKeyLastWord(mContext);
+                if (!TextUtils.isEmpty(lastWord)) {
+                    searchWord = lastWord;
+                }
             }
         }
         executeQueryTask(searchWord);
