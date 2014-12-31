@@ -1,6 +1,5 @@
 package com.madeinhk.english_chinesedictionary;
 
-import android.app.Application;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
@@ -35,6 +32,7 @@ import de.greenrobot.event.EventBus;
 
 public class DictionaryActivity extends ActionBarActivity {
     private static interface PagePos {
+        public static final int EMPTY = -1;
         public static final int DICTIONARY = 0;
         public static final int FAVOURITE = 1;
         public static final int ABOUT = 2;
@@ -44,12 +42,13 @@ public class DictionaryActivity extends ActionBarActivity {
     public static final String ACTION_VIEW_WORD = "android.intent.action.VIEW_WORD";
 
     private static final String DEFAULT_WORD = "welcome";
+    private static final String KEY_CURRENT_PAGE = "current_page";
 
     private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private boolean mIsVisible = false;
-    private Fragment mTopFragment;
+    private int mCurrentPage = PagePos.EMPTY;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -68,6 +67,7 @@ public class DictionaryActivity extends ActionBarActivity {
             handleIntent(getIntent());
             Analytics.trackAppLaunch(this);
         } else {
+            mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         }
     }
 
@@ -85,6 +85,12 @@ public class DictionaryActivity extends ActionBarActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
+    }
+
     private void setupToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
@@ -92,10 +98,10 @@ public class DictionaryActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    private void showFragment(Fragment fragment) {
+    private void showFragment(Fragment fragment, int page) {
         FragmentManager fragmentManager = DictionaryActivity.this.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
-        mTopFragment = fragment;
+        mCurrentPage = page;
     }
 
 
@@ -128,8 +134,8 @@ public class DictionaryActivity extends ActionBarActivity {
                         fragment = new AboutFragment();
                 }
                 selectDrawerItem(i);
-                if (!mTopFragment.getClass().equals(fragment.getClass())) {
-                    showFragment(fragment);
+                if (mCurrentPage != i) {
+                    showFragment(fragment, i);
                 }
             }
         });
@@ -217,10 +223,10 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void showWord(String word) {
-        if (!(mTopFragment instanceof DictionaryFragment)) {
+        if (mCurrentPage != PagePos.DICTIONARY) {
             Fragment fragment = DictionaryFragment.newInstance(word);
             selectDrawerItem(PagePos.DICTIONARY);
-            showFragment(fragment);
+            showFragment(fragment, PagePos.DICTIONARY);
         } else {
             EventBus.getDefault().post(new DictionaryFragment.UpdateWordEvent(word));
         }
@@ -255,7 +261,7 @@ public class DictionaryActivity extends ActionBarActivity {
     public void onEvent(LookupWordEvent event) {
         String word = event.word;
         Fragment fragment = DictionaryFragment.newInstance(word);
-        showFragment(fragment);
+        showFragment(fragment, PagePos.DICTIONARY);
         selectDrawerItem(PagePos.DICTIONARY);
     }
 
