@@ -1,6 +1,7 @@
 package com.madeinhk.english_chinesedictionary;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
+import com.mikepenz.lollipopshowcase.itemanimator.CustomItemAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,9 @@ public class FavouriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favourite, container, false);
+        mEmptyView = view.findViewById(R.id.empty_view);
+
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -57,23 +62,36 @@ public class FavouriteFragment extends Fragment {
 
         mAdapter = new MyAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new CustomItemAnimator());
 
-        mEmptyView = view.findViewById(R.id.empty_view);
         return view;
+    }
+
+    private class UpdateFavTask extends AsyncTask<Void, Void, List<Word>> {
+
+        @Override
+        protected List<Word> doInBackground(Void... params) {
+            ECDictionary ecDictionary = new ECDictionary(getActivity().getApplicationContext());
+            List<Word> favouriteWords = ecDictionary.getAllFavouriteWords();
+            return favouriteWords;
+        }
+
+        @Override
+        protected void onPostExecute(List<Word> wordList) {
+            showHideEmptyView(wordList.size() > 0);
+            mAdapter.setData(wordList);
+            mAdapter.notifyItemRangeInserted(0, wordList.size());
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        ECDictionary ecDictionary = new ECDictionary(getActivity().getApplicationContext());
-        mAdapter.setData(ecDictionary.getAllFavouriteWords());
-        mAdapter.notifyDataSetChanged();
-        showHideEmptyView();
+
     }
 
-    private void showHideEmptyView() {
-        if (mAdapter.getItemCount() > 0) {
+    private void showHideEmptyView(boolean hasData) {
+        if (hasData) {
             mEmptyView.setVisibility(View.GONE);
         } else {
             mEmptyView.setVisibility(View.VISIBLE);
@@ -84,6 +102,7 @@ public class FavouriteFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        new UpdateFavTask().execute();
     }
 
     @Override
@@ -116,7 +135,8 @@ public class FavouriteFragment extends Fragment {
         }
 
         public void setData(List<Word> wordList) {
-            mWordList = wordList;
+            mWordList.clear();
+            mWordList.addAll(wordList);
         }
 
         // Create new views (invoked by the layout manager)
