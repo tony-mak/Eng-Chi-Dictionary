@@ -35,12 +35,6 @@ public class DictionaryApplication extends Application {
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         mTracker = analytics.newTracker((BuildConfig.DEBUG) ? DEV_GA : GA);
         mTracker.enableAdvertisingIdCollection(true);
-
-        Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(
-                mTracker,                                        // Currently used Tracker.
-                Thread.getDefaultUncaughtExceptionHandler(),      // Current default uncaught exception handler.
-                this);                                         // Context of the application.
-        Thread.setDefaultUncaughtExceptionHandler(myHandler);
     }
 
     public Tracker getTracker() {

@@ -130,7 +130,7 @@ public class Word {
                     if (character == '&') {
                         currentState = ParserState.TYPE;
                     } else {
-                        throw new IllegalStateException("Expect a &");
+                        throw new IllegalStateException("Expect a & in " + str);
                     }
                     currentState = ParserState.SECOND_SHARP;
                     break;
