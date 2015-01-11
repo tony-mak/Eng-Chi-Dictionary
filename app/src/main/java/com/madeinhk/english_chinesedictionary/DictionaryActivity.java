@@ -101,7 +101,10 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private void showFragment(Fragment fragment, int page) {
         FragmentManager fragmentManager = DictionaryActivity.this.getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.animator.slide_from_bottom_in, R.animator.slide_from_bottom_out)
+                .replace(R.id.content, fragment)
+                .commit();
         mCurrentPage = page;
     }
 
