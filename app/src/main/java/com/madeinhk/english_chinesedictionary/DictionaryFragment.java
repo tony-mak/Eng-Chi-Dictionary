@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,9 +71,11 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
      */
     public static DictionaryFragment newInstance(String word) {
         DictionaryFragment fragment = new DictionaryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_WORD, word);
-        fragment.setArguments(args);
+        if (!TextUtils.isEmpty(word)) {
+            Bundle args = new Bundle();
+            args.putString(ARG_WORD, word);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 

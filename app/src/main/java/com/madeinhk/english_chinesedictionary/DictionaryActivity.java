@@ -42,7 +42,6 @@ public class DictionaryActivity extends ActionBarActivity {
     private static final String TAG = "DictionaryActivity";
     public static final String ACTION_VIEW_WORD = "android.intent.action.VIEW_WORD";
 
-    private static final String DEFAULT_WORD = "welcome";
     private static final String KEY_CURRENT_PAGE = "current_page";
 
     private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
@@ -127,7 +126,7 @@ public class DictionaryActivity extends ActionBarActivity {
                 Fragment fragment = null;
                 switch (i) {
                     case PagePos.DICTIONARY:
-                        fragment = DictionaryFragment.newInstance(DEFAULT_WORD);
+                        fragment = DictionaryFragment.newInstance(null);
                         break;
                     case PagePos.FAVOURITE:
                         fragment = FavouriteFragment.newInstance();
@@ -216,7 +215,7 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void handleIntent(Intent intent) {
-        String word = DEFAULT_WORD;
+        String word = null;
         if (Intent.ACTION_SEARCH.equals(intent.getAction()) || "com.google.android.gms.actions.SEARCH_ACTION".equals(intent.getAction())) {
             word = intent.getStringExtra(SearchManager.QUERY);
         } else if (ACTION_VIEW_WORD.equals(intent.getAction())) {

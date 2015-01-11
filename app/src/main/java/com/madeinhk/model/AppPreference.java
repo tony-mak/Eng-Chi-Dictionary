@@ -20,6 +20,6 @@ public class AppPreference {
     }
 
     public static String getKeyLastWord(Context context) {
-        return getSharedPreference(context).getString(KEY_LAST_WORD, null);
+        return getSharedPreference(context).getString(KEY_LAST_WORD, "welcome");
     }
 }
