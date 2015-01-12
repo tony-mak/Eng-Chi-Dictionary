@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
@@ -28,7 +29,14 @@ public class DictionaryApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setupCrashlytics();
         setupTracker();
+    }
+
+    private void setupCrashlytics() {
+        if (!BuildConfig.DEBUG) {
+            Crashlytics.start(this);
+        }
     }
 
     private void setupTracker() {
