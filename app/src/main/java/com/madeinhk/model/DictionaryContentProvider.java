@@ -65,7 +65,7 @@ public class DictionaryContentProvider extends ContentProvider {
         switch (code) {
             case BY_WORD:
                 String word = uri.getLastPathSegment();
-                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=? COLLATE NOCASE", new String[]{word}, null, null, sortOrder);
+                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=?", new String[]{word}, null, null, sortOrder);
             case BY_ID:
                 String id = uri.getLastPathSegment();
                 return db.query(table, projection, ECDictionary.COLUMNS._ID + "=?", new String[]{id}, null, null, sortOrder);
