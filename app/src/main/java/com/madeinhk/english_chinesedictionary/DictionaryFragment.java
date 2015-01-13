@@ -301,6 +301,9 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
     public void onEvent(UpdateWordEvent event) {
         String word = event.mWord;
+        if (TextUtils.isEmpty(word)) {
+            word = AppPreference.getKeyLastWord(mContext);
+        }
         executeQueryTask(word);
     }
 
