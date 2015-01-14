@@ -120,6 +120,12 @@ action#android.intent.action.BOOT_COMPLETED
 ADDED from AndroidManifest.xml:52:17
 	android:name
 		ADDED from AndroidManifest.xml:52:25
+meta-data#com.crashlytics.ApiKey
+ADDED from AndroidManifest.xml:55:9
+	android:name
+		ADDED from AndroidManifest.xml:55:20
+	android:value
+		ADDED from AndroidManifest.xml:55:58
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
