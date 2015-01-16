@@ -62,7 +62,7 @@ public class ClipboardService extends Service {
                 return;
             }
             CharSequence text = item.getText();
-            if (text != null) {
+            if (text != null && text.length() > 0) {
                 ECDictionary dictionary = new ECDictionary(ClipboardService.this);
                 String str = text.toString().toLowerCase();
                 Word word = dictionary.lookup(str);
