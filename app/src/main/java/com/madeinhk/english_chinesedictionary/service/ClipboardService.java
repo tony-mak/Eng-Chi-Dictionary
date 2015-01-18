@@ -2,18 +2,13 @@ package com.madeinhk.english_chinesedictionary.service;
 
 import android.app.Service;
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.madeinhk.english_chinesedictionary.R;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
 import com.madeinhk.utils.Stemmer;
@@ -25,6 +20,14 @@ public class ClipboardService extends Service {
     }
 
     public void onCreate() {
+        synchronized (mClipListener) {
+            if (!mRegistered) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboardManager.addPrimaryClipChangedListener(mClipListener);
+                mRegistered = true;
+                Log.d("ming", "reg");
+            }
+        }
     }
 
     public static void start(Context context) {
@@ -33,13 +36,7 @@ public class ClipboardService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        synchronized (mClipListener) {
-            if (!mRegistered) {
-                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.addPrimaryClipChangedListener(mClipListener);
-                mRegistered = true;
-            }
-        }
+
         return START_STICKY;
     }
 
@@ -52,19 +49,33 @@ public class ClipboardService extends Service {
     ClipboardManager.OnPrimaryClipChangedListener mClipListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         @Override
         public void onPrimaryClipChanged() {
+            Log.d("ming", "onPrimaryClipChanged");
+
             final ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData data = clipboard.getPrimaryClip();
             if (data == null) {
                 return;
             }
+            Log.d("ming", "data:" + data);
+            ClipDescription description = data.getDescription();
+            if (description == null || !description.getMimeType(0).equals("text/plain")) {
+                if (description != null) {
+                    Log.d("ming", "description " + description.getMimeType(0));
+                }
+                return;
+            }
+
+
             ClipData.Item item = data.getItemAt(0);
             if (item == null) {
                 return;
             }
             CharSequence text = item.getText();
+            Log.d("ming", "text: " + text);
             if (text != null && text.length() > 0) {
+                Log.d("ming", "text: " + text);
                 ECDictionary dictionary = new ECDictionary(ClipboardService.this);
-                String str = text.toString().toLowerCase();
+                String str = text.toString().toLowerCase().trim();
                 Word word = dictionary.lookup(str);
                 if (word == null && isEnglishWord(str)) {
                     // Try to have stemming
@@ -72,6 +83,7 @@ public class ClipboardService extends Service {
                     stemmer.add(str.toCharArray(), str.length());
                     stemmer.stem();
                     word = dictionary.lookup(stemmer.toString());
+                    Log.d("ming", "stemmer: " + stemmer.toString());
                 }
                 if (word != null) {
                     showToast(word);
@@ -81,22 +93,13 @@ public class ClipboardService extends Service {
         }
 
         private void showToast(Word word) {
-            String meaning = word.mTypeEntry.get(0).mMeaning;
-            LayoutInflater inflater =  LayoutInflater.from(ClipboardService.this);
-            View layout = inflater.inflate(R.layout.toast_meaning, null);
-            TextView text = (TextView) layout.findViewById(R.id.text);
-            text.setText(meaning);
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 20);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
+            startService(DictionaryHeadService.createIntent(ClipboardService.this, word));
         }
 
         private boolean isEnglishWord(String text) {
             char[] chars = text.toCharArray();
             boolean isEnglish = true;
-            for (int i = 0 ; i < chars.length; i++) {
+            for (int i = 0; i < chars.length; i++) {
                 if (!Character.isLetter(chars[i])) {
                     isEnglish = false;
                     break;
@@ -106,5 +109,12 @@ public class ClipboardService extends Service {
         }
     };
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRegistered) {
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.removePrimaryClipChangedListener(mClipListener);
+        }
+    }
 }

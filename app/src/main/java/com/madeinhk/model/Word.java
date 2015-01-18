@@ -1,5 +1,7 @@
 package com.madeinhk.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,7 +16,7 @@ import java.util.Map;
 /**
  * Created by tony on 8/11/14.
  */
-public class Word {
+public class Word implements Parcelable {
     public String mWord;
     public String mPhoneticString;
     public List<TypeEntry> mTypeEntry;
@@ -25,7 +27,7 @@ public class Word {
         this.mTypeEntry = typeEntry;
     }
 
-    public static class TypeEntry {
+    public static class TypeEntry implements Parcelable {
         public String mMeaning;
         public char mType;
         public String mEngExample;
@@ -70,6 +72,39 @@ public class Word {
             }
             throw new IllegalArgumentException("No type: " + mType);
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.mMeaning);
+            dest.writeInt(this.mType);
+            dest.writeString(this.mEngExample);
+            dest.writeString(this.mChiExample);
+        }
+
+        public TypeEntry() {
+        }
+
+        private TypeEntry(Parcel in) {
+            this.mMeaning = in.readString();
+            this.mType = (char) in.readInt();
+            this.mEngExample = in.readString();
+            this.mChiExample = in.readString();
+        }
+
+        public static final Parcelable.Creator<TypeEntry> CREATOR = new Parcelable.Creator<TypeEntry>() {
+            public TypeEntry createFromParcel(Parcel source) {
+                return new TypeEntry(source);
+            }
+
+            public TypeEntry[] newArray(int size) {
+                return new TypeEntry[size];
+            }
+        };
     }
 
     public static Word fromLookupResult(LookupResult lookupResult) {
@@ -165,4 +200,32 @@ public class Word {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mWord);
+        dest.writeString(this.mPhoneticString);
+        dest.writeTypedList(mTypeEntry);
+    }
+
+    private Word(Parcel in) {
+        this.mWord = in.readString();
+        this.mPhoneticString = in.readString();
+        mTypeEntry = new ArrayList<>();
+        in.readTypedList(mTypeEntry, TypeEntry.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Word> CREATOR = new Parcelable.Creator<Word>() {
+        public Word createFromParcel(Parcel source) {
+            return new Word(source);
+        }
+
+        public Word[] newArray(int size) {
+            return new Word[size];
+        }
+    };
 }

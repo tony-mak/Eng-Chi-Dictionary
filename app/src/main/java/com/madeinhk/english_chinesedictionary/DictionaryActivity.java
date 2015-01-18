@@ -23,8 +23,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.crashlytics.android.Crashlytics;
 import com.madeinhk.app.AboutFragment;
+import com.madeinhk.english_chinesedictionary.service.DictionaryHeadService;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.utils.Analytics;
