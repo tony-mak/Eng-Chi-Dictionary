@@ -11,15 +11,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center_horizontal"
         android:textColor="#FFFFFF"
         android:shadowColor="#BB000000"
+        android:layout_centerVertical="true"
         android:fontFamily="sans-serif-condensed"
         android:shadowRadius="2.75" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         android:background="@android:color/darker_gray" />
 
     <ToggleButton
@@ -27,7 +29,6 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/checkable_fav"
-        android:layout_margin="10dp"
         android:textOn=""
         android:textOff=""
         android:focusable="false"
