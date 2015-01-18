@@ -45,4 +45,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:+'
     compile project(':sqlite-assest-helper')
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'org.jsoup:jsoup:+'
 }

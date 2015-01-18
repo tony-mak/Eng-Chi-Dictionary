@@ -1,20 +1,28 @@
 package com.madeinhk.english_chinesedictionary.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
 import com.madeinhk.utils.Stemmer;
 
+import org.jsoup.Jsoup;
+
 public class ClipboardService extends Service {
     private boolean mRegistered = false;
+
+    private String mLastWord;
+    private long mTimestamp;
 
     public ClipboardService() {
     }
@@ -25,7 +33,6 @@ public class ClipboardService extends Service {
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.addPrimaryClipChangedListener(mClipListener);
                 mRegistered = true;
-                Log.d("ming", "reg");
             }
         }
     }
@@ -49,33 +56,18 @@ public class ClipboardService extends Service {
     ClipboardManager.OnPrimaryClipChangedListener mClipListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         @Override
         public void onPrimaryClipChanged() {
-            Log.d("ming", "onPrimaryClipChanged");
-
             final ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData data = clipboard.getPrimaryClip();
             if (data == null) {
                 return;
             }
-            Log.d("ming", "data:" + data);
-            ClipDescription description = data.getDescription();
-            if (description == null || !description.getMimeType(0).equals("text/plain")) {
-                if (description != null) {
-                    Log.d("ming", "description " + description.getMimeType(0));
-                }
-                return;
-            }
 
-
-            ClipData.Item item = data.getItemAt(0);
-            if (item == null) {
-                return;
-            }
-            CharSequence text = item.getText();
-            Log.d("ming", "text: " + text);
-            if (text != null && text.length() > 0) {
-                Log.d("ming", "text: " + text);
+            String text = extractTextFromClipData(data);
+            if (!TextUtils.isEmpty(text) && !isDuplicated(text)) {
                 ECDictionary dictionary = new ECDictionary(ClipboardService.this);
-                String str = text.toString().toLowerCase().trim();
+                String str = text.toLowerCase().trim();
+                mLastWord = str;
+                mTimestamp = System.currentTimeMillis();
                 Word word = dictionary.lookup(str);
                 if (word == null && isEnglishWord(str)) {
                     // Try to have stemming
@@ -83,13 +75,45 @@ public class ClipboardService extends Service {
                     stemmer.add(str.toCharArray(), str.length());
                     stemmer.stem();
                     word = dictionary.lookup(stemmer.toString());
-                    Log.d("ming", "stemmer: " + stemmer.toString());
                 }
                 if (word != null) {
                     showToast(word);
                 }
             }
+        }
 
+        // To tackle with the funny behaviour of clipboard listener
+        private boolean isDuplicated(String text) {
+            return text.equals(mLastWord) && System.currentTimeMillis() - mTimestamp < 1000;
+        }
+
+        // It seems that the clipboard api is quite buggy, defensive coding here
+        @SuppressLint("NewApi")
+        private String extractTextFromClipData(ClipData clipData) {
+            if (clipData == null) {
+                return null;
+            }
+
+            ClipData.Item item = clipData.getItemAt(0);
+            if (item == null) {
+                return null;
+            }
+
+            ClipDescription description = clipData.getDescription();
+            if (description == null) {
+                return null;
+            }
+            String mimeType = description.getMimeType(0);
+            if ("text/plain".equals(mimeType)) {
+                CharSequence text = item.getText();
+                if (text != null) {
+                    return text.toString();
+                }
+            } else if ("text/html".equals(mimeType) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                String html = item.getHtmlText();
+                return Jsoup.parse(html).text();
+            }
+            return null;
         }
 
         private void showToast(Word word) {
