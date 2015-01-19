@@ -28,6 +28,7 @@ public class DictionaryHeadService extends Service {
     private TextView mTextView;
     private Word mWord;
     private ToggleButton mFavButton;
+    private Handler mHandler;
     private static final String KEY_WORD = "key_word";
 
     @Override
@@ -39,25 +40,70 @@ public class DictionaryHeadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-
+        mHandler = new Handler();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         mWord = intent.getParcelableExtra(KEY_WORD);
+        if (mDictionaryHead == null) {
+            LayoutInflater inflate = (LayoutInflater)
+                    this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mDictionaryHead = inflate.inflate(R.layout.dictionary_head, null);
+            mTextView = (TextView) mDictionaryHead.findViewById(R.id.message);
+            mFavButton = (ToggleButton) mDictionaryHead.findViewById(R.id.fav_button);
 
-        LayoutInflater inflate = (LayoutInflater)
-                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mDictionaryHead = inflate.inflate(R.layout.dictionary_head, null);
-        mTextView = (TextView) mDictionaryHead.findViewById(R.id.message);
+            mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+            params.windowAnimations = android.R.style.Animation_Toast;
+            params.type = WindowManager.LayoutParams.TYPE_TOAST;
+            params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            params.x = 0;
+            params.y = 100;
+
+            mWindowManager.addView(mDictionaryHead, params);
+
+            mDictionaryHead.setOnTouchListener(new View.OnTouchListener() {
+                private int initialX;
+                private int initialY;
+                private float initialTouchX;
+                private float initialTouchY;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    restartDismissTimer();
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            initialX = params.x;
+                            initialY = params.y;
+                            initialTouchX = event.getRawX();
+                            initialTouchY = event.getRawY();
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            params.x = initialX + (int) (event.getRawX() - initialTouchX);
+                            params.y = initialY - (int) (event.getRawY() - initialTouchY);
+                            mWindowManager.updateViewLayout(mDictionaryHead, params);
+                            return true;
+                    }
+                    return false;
+                }
+            });
+        }
+
         mTextView.setText(mWord.mTypeEntry.get(0).mMeaning);
 
-        mFavButton = (ToggleButton) mDictionaryHead.findViewById(R.id.fav_button);
         final Favourite favourite = Favourite.fromWord(mWord);
         boolean alreadyMarked = favourite.isExists(this);
         mFavButton.setChecked(alreadyMarked);
+
         mFavButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -68,67 +114,31 @@ public class DictionaryHeadService extends Service {
                 }
             }
         });
+        restartDismissTimer();
 
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        params.windowAnimations = android.R.style.Animation_Toast;
-        params.type = WindowManager.LayoutParams.TYPE_TOAST;
-
-
-        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        params.x = 0;
-        params.y = 100;
-
-        mWindowManager.addView(mDictionaryHead, params);
-
-
-        mDictionaryHead.setOnTouchListener(new View.OnTouchListener() {
-            private int initialX;
-            private int initialY;
-            private float initialTouchX;
-            private float initialTouchY;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        initialX = params.x;
-                        initialY = params.y;
-                        initialTouchX = event.getRawX();
-                        initialTouchY = event.getRawY();
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        params.y = initialY - (int) (event.getRawY() - initialTouchY);
-                        mWindowManager.updateViewLayout(mDictionaryHead, params);
-                        return true;
-                }
-                return false;
-            }
-        });
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopSelf();
-            }
-        }, 5000);
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDictionaryHead != null) mWindowManager.removeView(mDictionaryHead);
+        removeView();
+    }
+
+    private void restartDismissTimer() {
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopSelf();
+            }
+        }, 5000);
+    }
+
+    private void removeView() {
+        if (mDictionaryHead != null) {
+            mWindowManager.removeView(mDictionaryHead);
+        }
     }
 
 
