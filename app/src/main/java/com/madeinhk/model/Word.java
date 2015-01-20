@@ -6,6 +6,8 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -109,6 +111,7 @@ public class Word implements Parcelable {
 
     public static Word fromLookupResult(LookupResult lookupResult) {
         String word = lookupResult.getWord();
+        Crashlytics.log("fromLookupResult: " + word);
         String mPhoneticString = lookupResult.getPhoneticString();
         String meaningString = lookupResult.getMeaning();
         String exampleString = lookupResult.getExample();
