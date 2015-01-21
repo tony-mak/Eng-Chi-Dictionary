@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.madeinhk.english_chinesedictionary.DictionaryActivity;
 import com.madeinhk.english_chinesedictionary.R;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
@@ -99,6 +100,16 @@ public class DictionaryHeadService extends Service {
         }
 
         mTextView.setText(mWord.mTypeEntry.get(0).mMeaning);
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = DictionaryActivity.getIntent(DictionaryHeadService.this, mWord.mWord);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                mHandler.removeCallbacksAndMessages(null);
+                stopSelf();
+            }
+        });
 
         final Favourite favourite = Favourite.fromWord(mWord);
         boolean alreadyMarked = favourite.isExists(this);

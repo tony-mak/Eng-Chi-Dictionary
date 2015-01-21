@@ -93,5 +93,4 @@ public class ECDictionary {
         cursor.close();
         return wordList;
     }
-
 }

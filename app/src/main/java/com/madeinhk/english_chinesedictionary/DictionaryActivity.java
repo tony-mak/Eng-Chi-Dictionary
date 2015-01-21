@@ -218,7 +218,6 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void handleIntent(Intent intent) {
-        Log.d("ming", "intent:" + intent);
         String word = null;
         if (Intent.ACTION_SEARCH.equals(intent.getAction()) || "com.google.android.gms.actions.SEARCH_ACTION".equals(intent.getAction())) {
             word = intent.getStringExtra(SearchManager.QUERY);
@@ -279,6 +278,13 @@ public class DictionaryActivity extends ActionBarActivity {
         public LookupWordEvent(String word) {
             this.word = word;
         }
+    }
+    
+    public static Intent getIntent(Context context, String word) {
+        Intent intent = new Intent(context, DictionaryActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, word);
+        return intent;
     }
 
 }
