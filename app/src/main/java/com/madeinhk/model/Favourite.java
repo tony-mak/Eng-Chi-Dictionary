@@ -43,7 +43,7 @@ public class Favourite {
     }
 
     public boolean isExists(Context context) {
-        Cursor cursor = context.getContentResolver().query(CONTENT_URI, new String[]{COLUMNS.ID}, COLUMNS.WORD + "=?", new String[]{mWord}, null, null);
+        Cursor cursor = context.getContentResolver().query(CONTENT_URI, new String[]{COLUMNS.ID}, COLUMNS.WORD + "=?", new String[]{mWord}, null);
         try {
             return cursor.moveToFirst();
         } finally {
