@@ -25,4 +25,9 @@ public class Analytics {
         Tracker tracker = getTracker(context);
         track(tracker, "app_launch");
     }
+
+    public static void trackPopup(Context context) {
+        Tracker tracker = getTracker(context);
+        track(tracker, "popup");
+    }
 }

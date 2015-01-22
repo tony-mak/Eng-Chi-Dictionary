@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -21,6 +22,7 @@ import com.madeinhk.english_chinesedictionary.DictionaryActivity;
 import com.madeinhk.english_chinesedictionary.R;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
+import com.madeinhk.utils.Analytics;
 
 public class DictionaryHeadService extends Service {
 
@@ -47,6 +49,7 @@ public class DictionaryHeadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        Analytics.trackPopup(this);
         mWord = intent.getParcelableExtra(KEY_WORD);
         if (mDictionaryHead == null) {
             LayoutInflater inflate = (LayoutInflater)
@@ -75,6 +78,10 @@ public class DictionaryHeadService extends Service {
                 private int initialY;
                 private float initialTouchX;
                 private float initialTouchY;
+                private boolean mAlwaysInTapRegion = true;
+                final ViewConfiguration configuration = ViewConfiguration.get(DictionaryHeadService.this);
+                final int touchSlop = configuration.getScaledTouchSlop();
+                private int mTouchSlopSquare = touchSlop * touchSlop;
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -85,10 +92,26 @@ public class DictionaryHeadService extends Service {
                             initialY = params.y;
                             initialTouchX = event.getRawX();
                             initialTouchY = event.getRawY();
+                            mAlwaysInTapRegion = true;
                             return true;
                         case MotionEvent.ACTION_UP:
+                            if (mAlwaysInTapRegion) {
+                                Intent intent = DictionaryActivity.getIntent(DictionaryHeadService.this, mWord.mWord);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                mHandler.removeCallbacksAndMessages(null);
+                                stopSelf();
+                            }
                             return true;
+                        case MotionEvent.ACTION_CANCEL:
+                            mAlwaysInTapRegion = false;
                         case MotionEvent.ACTION_MOVE:
+                            final int deltaX = (int) (event.getX() - initialX);
+                            final int deltaY = (int) (event.getY() - initialY);
+                            int distance = (deltaX * deltaX) + (deltaY * deltaY);
+                            if (distance > mTouchSlopSquare) {
+                                mAlwaysInTapRegion = false;
+                            }
                             params.x = initialX + (int) (event.getRawX() - initialTouchX);
                             params.y = initialY - (int) (event.getRawY() - initialTouchY);
                             mWindowManager.updateViewLayout(mDictionaryHead, params);
@@ -100,16 +123,7 @@ public class DictionaryHeadService extends Service {
         }
 
         mTextView.setText(mWord.mTypeEntry.get(0).mMeaning);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = DictionaryActivity.getIntent(DictionaryHeadService.this, mWord.mWord);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                mHandler.removeCallbacksAndMessages(null);
-                stopSelf();
-            }
-        });
+
 
         final Favourite favourite = Favourite.fromWord(mWord);
         boolean alreadyMarked = favourite.isExists(this);
