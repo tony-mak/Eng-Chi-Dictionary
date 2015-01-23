@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -165,6 +166,10 @@ public class DictionaryActivity extends ActionBarActivity {
         handleIntent(intent);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -179,7 +184,7 @@ public class DictionaryActivity extends ActionBarActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
-        if (mCurrentPage == PagePos.DICTIONARY) {
+        if (mCurrentPage == PagePos.DICTIONARY && Intent.ACTION_MAIN.equals(getIntent().getAction())) {
             searchItem.expandActionView();
         }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
