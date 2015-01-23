@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.madeinhk.app.AboutFragment;
-import com.madeinhk.english_chinesedictionary.service.DictionaryHeadService;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.utils.Analytics;
@@ -48,9 +46,7 @@ public class DictionaryActivity extends ActionBarActivity {
     private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private boolean mIsVisible = false;
     private int mCurrentPage = PagePos.EMPTY;
-
     private ActionBarDrawerToggle mDrawerToggle;
 
 
@@ -75,14 +71,13 @@ public class DictionaryActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mIsVisible = true;
+        handleIntent(getIntent());
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mIsVisible = false;
         EventBus.getDefault().unregister(this);
     }
 
@@ -166,10 +161,8 @@ public class DictionaryActivity extends ActionBarActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (mIsVisible) {
-            setIntent(intent);
-            handleIntent(intent);
-        }
+        setIntent(intent);
+        handleIntent(intent);
     }
 
 
@@ -279,7 +272,7 @@ public class DictionaryActivity extends ActionBarActivity {
             this.word = word;
         }
     }
-    
+
     public static Intent getIntent(Context context, String word) {
         Intent intent = new Intent(context, DictionaryActivity.class);
         intent.setAction(Intent.ACTION_SEARCH);
