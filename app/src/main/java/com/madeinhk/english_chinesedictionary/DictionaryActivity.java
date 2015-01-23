@@ -49,6 +49,9 @@ public class DictionaryActivity extends ActionBarActivity {
     private ListView mDrawerList;
     private int mCurrentPage = PagePos.EMPTY;
     private ActionBarDrawerToggle mDrawerToggle;
+    private boolean mIsVisible;
+
+    private static final String EXTRA_FROM_TOAST = "from_toast";
 
 
     @Override
@@ -72,13 +75,17 @@ public class DictionaryActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
-        handleIntent(getIntent());
+        if (getIntent().getBooleanExtra(EXTRA_FROM_TOAST, false)) {
+            handleIntent(getIntent());
+        }
+        mIsVisible = true;
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mIsVisible = false;
         EventBus.getDefault().unregister(this);
     }
 
@@ -163,7 +170,9 @@ public class DictionaryActivity extends ActionBarActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-        handleIntent(intent);
+        if (mIsVisible) {
+            handleIntent(intent);
+        }
     }
 
     @Override
@@ -282,6 +291,7 @@ public class DictionaryActivity extends ActionBarActivity {
         Intent intent = new Intent(context, DictionaryActivity.class);
         intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, word);
+        intent.putExtra(EXTRA_FROM_TOAST, true);
         return intent;
     }
 
