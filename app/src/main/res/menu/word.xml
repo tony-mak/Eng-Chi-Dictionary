@@ -4,6 +4,5 @@
     <item
         android:id="@+id/favourite"
         android:icon="@drawable/ic_star_outline_white_48dp"
-        android:title="Mark as favourite"
         custom:showAsAction="ifRoom"></item>
 </menu>

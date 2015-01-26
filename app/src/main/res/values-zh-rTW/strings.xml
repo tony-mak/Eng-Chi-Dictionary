@@ -9,5 +9,7 @@
 	<string name="drawer_close">關閉抽屜</string>
 	<string name="hello_blank_fragment">你好空白片段</string>
 	<string name="try_to_save_some_word">嘗試保存一些單詞!</string>
+	<string name="save_word">保存它</string>
+	<string name="unsave_it">忘記它</string>
 
 </resources>

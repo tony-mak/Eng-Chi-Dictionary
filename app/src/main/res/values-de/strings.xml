@@ -9,5 +9,7 @@
 	<string name="drawer_close">Enge Navigation Schublade</string>
 	<string name="hello_blank_fragment">Hallo leere fragment</string>
 	<string name="try_to_save_some_word">Versuchen Sie, einige Worte zu speichern!</string>
+	<string name="save_word">Speichern Sie es</string>
+	<string name="unsave_it">Unsave es</string>
 
 </resources>

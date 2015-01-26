@@ -216,6 +216,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             boolean alreadyMarked = favourite.isExists(mContext);
             if (mFavouriteItem != null) {
                 mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R.drawable.ic_star_outline_white_48dp);
+                mFavouriteItem.setTitle(alreadyMarked ? R.string.unsave_it : R.string.save_word);
                 mFavouriteItem.setChecked(alreadyMarked);
                 mFavouriteItem.setVisible(true);
             }

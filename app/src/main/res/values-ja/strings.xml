@@ -9,5 +9,7 @@
 	<string name="drawer_close">引き出しを閉じるナビゲーション</string>
 	<string name="hello_blank_fragment">こんにちは、空のフラグメント</string>
 	<string name="try_to_save_some_word">いくつかの単語を保存しようとしてください ！</string>
+	<string name="save_word">それを保存します。</string>
+	<string name="unsave_it">それを保存しません。</string>
 
 </resources>
