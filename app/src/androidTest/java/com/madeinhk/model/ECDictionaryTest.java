@@ -27,4 +27,10 @@ public class ECDictionaryTest extends AndroidTestCase {
     }
 
 
+    public void testLookupBeautiful() {
+        ECDictionary ecDictionary = new ECDictionary(getContext());
+        Word word = ecDictionary.lookup("flick");
+    }
+
+
 }

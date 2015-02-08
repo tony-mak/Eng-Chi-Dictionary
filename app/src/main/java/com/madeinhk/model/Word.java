@@ -115,6 +115,7 @@ public class Word implements Parcelable {
         String mPhoneticString = lookupResult.getPhoneticString();
         String meaningString = lookupResult.getMeaning();
         String exampleString = lookupResult.getExample();
+
         Map<Character, String> meaningMap = parseString(meaningString);
         Map<Character, String> exampleMap = parseString(exampleString);
 
@@ -126,7 +127,9 @@ public class Word implements Parcelable {
             if (!TextUtils.isEmpty(example)) {
                 String[] tokens = example.split("\\^");
                 tmp.mEngExample = tokens[0];
-                tmp.mChiExample = tokens[1];
+                if (tokens.length == 2) {
+                    tmp.mChiExample = tokens[1];
+                }
             }
             tmp.mType = entry.getKey();
             entries.add(tmp);
@@ -144,6 +147,7 @@ public class Word implements Parcelable {
 
     private static Map<Character, String> parseString(String str) {
         str = decodeHtmlString(str);
+
         Map<Character, String> map = new HashMap<Character, String>();
         if (TextUtils.isEmpty(str)) {
             return map;
@@ -156,6 +160,7 @@ public class Word implements Parcelable {
         while (currentState != ParserState.END) {
             char character = str.charAt(currentIndex);
             currentIndex++;
+
             switch (currentState) {
                 case START:
                     if (character == '&') {
@@ -178,9 +183,6 @@ public class Word implements Parcelable {
                     break;
                 case TYPE:
                     builder = new StringBuilder();
-                    builder.append(character);
-                    currentState = ParserState.DATA;
-                    break;
                 case DATA:
                     boolean end = currentIndex == length;
                     if (character == '&' || end) {

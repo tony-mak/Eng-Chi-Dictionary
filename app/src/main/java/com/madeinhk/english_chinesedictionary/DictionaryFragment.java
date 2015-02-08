@@ -237,9 +237,11 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                 builder.append("\n");
                 builder.append(typeEntry.mMeaning);
                 builder.append("\n");
-                if (!TextUtils.isEmpty(typeEntry.mEngExample) && !(TextUtils.isEmpty(typeEntry.mChiExample))) {
+                if (!TextUtils.isEmpty(typeEntry.mEngExample)) {
                     builder.append(Html.fromHtml(typeEntry.mEngExample));
                     builder.append("\n");
+                }
+                if (!TextUtils.isEmpty(typeEntry.mChiExample)) {
                     builder.append(typeEntry.mChiExample);
                     builder.append("\n");
                 }
