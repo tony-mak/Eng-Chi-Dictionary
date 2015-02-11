@@ -83,7 +83,6 @@ public class DictionaryActivity extends ActionBarActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("https://www.youtube.com/watch?v=a5nDV2c04Q4"));
                     startActivity(intent);
-                    AppPreference.saveShowedTutorial(DictionaryActivity.this, true);
                 }
             });
             builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -93,6 +92,7 @@ public class DictionaryActivity extends ActionBarActivity {
                 }
             });
             builder.show();
+            AppPreference.saveShowedTutorial(DictionaryActivity.this, true);
         }
 
     }
