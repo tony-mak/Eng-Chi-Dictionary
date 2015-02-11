@@ -1,7 +1,9 @@
 package com.madeinhk.english_chinesedictionary;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -25,6 +27,7 @@ import android.widget.ListView;
 
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
+import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.utils.Analytics;
 
@@ -70,6 +73,28 @@ public class DictionaryActivity extends ActionBarActivity {
         } else {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         }
+
+        if (!AppPreference.getShowedTutorial(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.see_tut_title);
+            builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("https://www.youtube.com/watch?v=a5nDV2c04Q4"));
+                    startActivity(intent);
+                    AppPreference.saveShowedTutorial(DictionaryActivity.this, true);
+                }
+            });
+            builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
+
     }
 
     @Override

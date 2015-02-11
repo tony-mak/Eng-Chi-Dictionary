@@ -17,4 +17,7 @@
     <string name="save_word">Save it</string>
 
     <string name="unsave_it">Unsave it</string>
+
+    <string name="see_tut_title">Do you want to figure out how to use this app?</string>
+
 </resources>

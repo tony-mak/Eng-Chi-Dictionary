@@ -22,4 +22,15 @@ public class AppPreference {
     public static String getKeyLastWord(Context context) {
         return getSharedPreference(context).getString(KEY_LAST_WORD, "welcome");
     }
+
+
+    private static final String KEY_SHOWED_TUTORIAL = "showed_tutorial";
+
+    public static void saveShowedTutorial(Context context, boolean showed) {
+        getSharedPreference(context).edit().putBoolean(KEY_SHOWED_TUTORIAL, showed).apply();
+    }
+
+    public static boolean getShowedTutorial(Context context) {
+        return getSharedPreference(context).getBoolean(KEY_SHOWED_TUTORIAL, false);
+    }
 }
