@@ -63,9 +63,13 @@ public class ClipboardService extends Service {
             }
 
             String text = extractTextFromClipData(data);
+            if (text != null) {
+                text = text.trim();
+            }
+
             if (!TextUtils.isEmpty(text) && !isDuplicated(text)) {
                 ECDictionary dictionary = new ECDictionary(ClipboardService.this);
-                String str = text.toLowerCase().trim();
+                String str = text.toLowerCase();
                 mLastWord = str;
                 mTimestamp = System.currentTimeMillis();
                 Word word = dictionary.lookup(str);
