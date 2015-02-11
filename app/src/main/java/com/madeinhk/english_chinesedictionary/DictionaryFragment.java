@@ -198,7 +198,9 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
             @Override
             protected void onPostExecute(Word word) {
-                buildHtmlFromDictionary(word);
+                if (isAdded()) {
+                    buildHtmlFromDictionary(word);
+                }
             }
         }.execute(query);
     }
