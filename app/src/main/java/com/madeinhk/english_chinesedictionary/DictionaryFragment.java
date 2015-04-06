@@ -212,24 +212,29 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
+    private boolean mNeedUpdateFavMenuItem = false;
     private void updateFavouriteMenuItem(Word word) {
-        if (word != null) {
-            Favourite favourite = Favourite.fromWord(word);
-            boolean alreadyMarked = favourite.isExists(mContext);
-            if (mFavouriteItem != null) {
+        if (mNeedUpdateFavMenuItem && mFavouriteItem != null) {
+            if (word != null) {
+                Favourite favourite = Favourite.fromWord(word);
+                boolean alreadyMarked = favourite.isExists(mContext);
                 mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R.drawable.ic_star_outline_white_48dp);
                 mFavouriteItem.setTitle(alreadyMarked ? R.string.unsave_it : R.string.save_word);
                 mFavouriteItem.setChecked(alreadyMarked);
                 mFavouriteItem.setVisible(true);
+            } else {
+                mFavouriteItem.setVisible(false);
             }
-        } else {
-            mFavouriteItem.setVisible(false);
+            mNeedUpdateFavMenuItem = false;
         }
     }
 
     private void buildHtmlFromDictionary(Word word) {
         mWord = word;
+
+        mNeedUpdateFavMenuItem = true;
         updateFavouriteMenuItem(word);
+
         if (word != null) {
             mWordTextView.setText(word.mWord);
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
@@ -264,6 +269,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.word, menu);
         mFavouriteItem = menu.findItem(R.id.favourite);
+        updateFavouriteMenuItem(mWord);
     }
 
     @Override
