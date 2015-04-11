@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId "com.madeinhk.english_chinesedictionary"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 15
         versionName "0.3.1"
@@ -45,4 +45,5 @@ dependencies {
     compile project(':sqlite-assest-helper')
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'org.jsoup:jsoup:+'
+    compile 'com.android.support:recyclerview-v7:+'
 }

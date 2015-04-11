@@ -6,24 +6,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
@@ -49,7 +54,7 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private RecyclerView mDrawerList;
     private int mCurrentPage = PagePos.EMPTY;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mIsVisible;
@@ -138,24 +143,35 @@ public class DictionaryActivity extends ActionBarActivity {
 
 
     private void selectDrawerItem(int pos) {
-        mDrawerList.setItemChecked(pos, true);
+//        mDrawerList.setItemChecked(pos, true);
         setTitle(ITEM_NAMES[pos]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     private void setupDrawerLayout() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (RecyclerView) findViewById(R.id.left_drawer);
 
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, ITEM_NAMES));
 
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        mDrawerList.setHasFixedSize(true);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mDrawerList.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        String[] texts = new String[]{"Dictionary", "Saved words", "About"};
+        int[] icons = new int[]{R.drawable.ic_magnify_grey600_24dp, R.drawable.ic_star_grey600_24dp, R.drawable.ic_information_grey600_24dp};
+
+
+        OnItemClickListener onItemClickListener = new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(View v, int position) {
                 Fragment fragment = null;
-                switch (i) {
+                switch (position) {
                     case PagePos.DICTIONARY:
                         fragment = DictionaryFragment.newInstance(null);
                         break;
@@ -165,12 +181,16 @@ public class DictionaryActivity extends ActionBarActivity {
                     case PagePos.ABOUT:
                         fragment = new AboutFragment();
                 }
-                selectDrawerItem(i);
-                if (mCurrentPage != i) {
-                    showFragment(fragment, i);
+                selectDrawerItem(position);
+                if (mCurrentPage != position) {
+                    showFragment(fragment, position);
                 }
             }
-        });
+        };
+
+        MyAdapter mAdapter = new MyAdapter(texts, icons, onItemClickListener);
+        mDrawerList.setAdapter(mAdapter);
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
@@ -318,6 +338,74 @@ public class DictionaryActivity extends ActionBarActivity {
         intent.putExtra(SearchManager.QUERY, word);
         intent.putExtra(EXTRA_FROM_TOAST, true);
         return intent;
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(View v, int position);
+    }
+
+
+    public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+        private String[] mTexts;
+        private int[] mImageRes;
+        private OnItemClickListener mOnItemClickListener;
+
+        // Provide a reference to the views for each data item
+        // Complex data items may need more than one view per item, and
+        // you provide access to all the views for a data item in a view holder
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            // each data item is just a string in this case
+            public TextView mTextView;
+            public ImageView mImageView;
+
+            public ViewHolder(View v, final OnItemClickListener listener) {
+                super(v);
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClick(v, getAdapterPosition());
+                    }
+                });
+                mTextView = (TextView) v.findViewById(R.id.text);
+                mImageView = (ImageView) v.findViewById(R.id.icon);
+            }
+
+        }
+
+        // Provide a suitable constructor (depends on the kind of dataset)
+        public MyAdapter(String[] text, int[] imageRes, OnItemClickListener onItemClickListener) {
+            mTexts = text;
+            mImageRes = imageRes;
+            mOnItemClickListener = onItemClickListener;
+        }
+
+        // Create new views (invoked by the layout manager)
+        @Override
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                       int viewType) {
+            // create a new view
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.drawer_list_item, parent, false);
+            // set the view's size, margins, paddings and layout parameters
+            ViewHolder vh = new ViewHolder(v, mOnItemClickListener);
+            return vh;
+        }
+
+        // Replace the contents of a view (invoked by the layout manager)
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            // - get element from your dataset at this position
+            // - replace the contents of the view with that element
+            holder.mTextView.setText(mTexts[position]);
+            holder.mImageView.setImageResource(mImageRes[position]);
+
+        }
+
+        // Return the size of your dataset (invoked by the layout manager)
+        @Override
+        public int getItemCount() {
+            return mTexts.length;
+        }
     }
 
 }
