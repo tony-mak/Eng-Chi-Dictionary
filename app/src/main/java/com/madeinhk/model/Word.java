@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.madeinhk.english_chinesedictionary.BuildConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -160,7 +161,7 @@ public class Word implements Parcelable {
         while (currentState != ParserState.END) {
             char character = str.charAt(currentIndex);
             currentIndex++;
-
+            ParserState oldState = currentState;
             switch (currentState) {
                 case START:
                     if (character == '&') {
@@ -171,11 +172,16 @@ public class Word implements Parcelable {
                     break;
                 case FIRST_SHARP:
                     if (character == '&') {
-                        currentState = ParserState.TYPE;
+                        if (builder != null) {
+                            map.put(type, builder.toString());
+                        }
+                        currentState = ParserState.SECOND_SHARP;
                     } else {
-                        throw new IllegalStateException("Expect a & in " + str);
+                        // It turns that the & is just normal data
+                        builder.append('&');
+                        builder.append(character);
+                        currentState = ParserState.DATA;
                     }
-                    currentState = ParserState.SECOND_SHARP;
                     break;
                 case SECOND_SHARP:
                     type = character;
@@ -185,20 +191,20 @@ public class Word implements Parcelable {
                     builder = new StringBuilder();
                 case DATA:
                     boolean end = currentIndex == length;
-                    if (character == '&' || end) {
-                        if (end) {
-                            builder.append(character);
-                        }
-                        map.put(type, builder.toString());
+                    if (character == '&') {
                         currentState = ParserState.FIRST_SHARP;
-                        if (end) {
-                            currentState = ParserState.END;
-                        }
+                    } else if (end) {
+                        builder.append(character);
+                        map.put(type, builder.toString());
+                        currentState = ParserState.END;
                     } else {
                         builder.append(character);
                         currentState = ParserState.DATA;
                     }
                     break;
+            }
+            if (BuildConfig.DEBUG) {
+                Log.d("Parser", String.format("Find %c, state changed from %s to %s", character, oldState.name(), currentState.name()));
             }
         }
         return map;

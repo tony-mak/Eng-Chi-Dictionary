@@ -31,6 +31,12 @@ public class ECDictionaryTest extends AndroidTestCase {
         ECDictionary ecDictionary = new ECDictionary(getContext());
         Word word = ecDictionary.lookup("flick");
     }
+    public void testLookupInstitute() {
+        ECDictionary ecDictionary = new ECDictionary(getContext());
+        Word word = ecDictionary.lookup("institute");
+    }
+
+
 
 
 }
