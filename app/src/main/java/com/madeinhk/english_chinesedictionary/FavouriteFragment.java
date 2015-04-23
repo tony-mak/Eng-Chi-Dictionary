@@ -221,7 +221,9 @@ public class FavouriteFragment extends Fragment {
                 }
                 tmpList.add(word);
             }
-            mSections.add(new SectionItem(lastInitial, tmpList));
+            if (tmpList.size() > 0) {
+                mSections.add(new SectionItem(lastInitial, tmpList));
+            }
         }
 
         // Create new views (invoked by the layout manager)

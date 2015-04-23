@@ -6,8 +6,8 @@
     android:minHeight="45dp"
     android:layout_gravity="center"
     android:layout_margin="5dp"
-    card_view:contentPaddingLeft="6dp"
-    card_view:contentPaddingRight="6dp"
+    card_view:contentPaddingLeft="8dp"
+    card_view:contentPaddingRight="8dp"
     card_view:contentPaddingTop="3dp"
     card_view:contentPaddingBottom="3dp"
     card_view:cardCornerRadius="@dimen/cardview_default_radius">

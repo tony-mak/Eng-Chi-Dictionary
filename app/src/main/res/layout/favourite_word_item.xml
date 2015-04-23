@@ -6,4 +6,5 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:paddingLeft="8dp"
     android:textSize="24sp" />
