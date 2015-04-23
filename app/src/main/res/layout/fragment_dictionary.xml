@@ -47,6 +47,6 @@
             android:paddingRight="@dimen/left_right_padding"
             android:paddingTop="@dimen/ui_spacing"
             android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_body_1_material" />
+            android:textSize="@dimen/abc_text_size_medium_material" />
     </ScrollView>
 </LinearLayout>
