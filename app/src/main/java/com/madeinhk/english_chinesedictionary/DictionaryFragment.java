@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
@@ -212,9 +213,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
-    private boolean mNeedUpdateFavMenuItem = false;
     private void updateFavouriteMenuItem(Word word) {
-        if (mNeedUpdateFavMenuItem && mFavouriteItem != null) {
+        if (mFavouriteItem != null) {
             if (word != null) {
                 Favourite favourite = Favourite.fromWord(word);
                 boolean alreadyMarked = favourite.isExists(mContext);
@@ -225,16 +225,14 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             } else {
                 mFavouriteItem.setVisible(false);
             }
-            mNeedUpdateFavMenuItem = false;
+        } else {
+            Crashlytics.logException(new Exception("mFavouriteItem is null"));
         }
     }
 
     private void buildHtmlFromDictionary(Word word) {
         mWord = word;
-
-        mNeedUpdateFavMenuItem = true;
         updateFavouriteMenuItem(word);
-
         if (word != null) {
             mWordTextView.setText(word.mWord);
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
@@ -269,7 +267,6 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.word, menu);
         mFavouriteItem = menu.findItem(R.id.favourite);
-        updateFavouriteMenuItem(mWord);
     }
 
     @Override
