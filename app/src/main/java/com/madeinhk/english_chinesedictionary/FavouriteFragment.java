@@ -306,7 +306,6 @@ public class FavouriteFragment extends Fragment {
                 int itemType = getItemViewType(position);
                 if (itemType == TYPE_HEADER) {
                     TextView tv = holder.mTextView;
-                    tv.setPaintFlags(tv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                     tv.setText(String.valueOf(Character.toUpperCase(mSection.mInitial)));
                 } else {
                     TextView tv = holder.mTextView;

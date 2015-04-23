@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_information_grey600_24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:alpha="0.54" />

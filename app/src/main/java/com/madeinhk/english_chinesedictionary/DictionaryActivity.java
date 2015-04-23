@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,6 +58,8 @@ public class DictionaryActivity extends ActionBarActivity {
     private RecyclerView mDrawerList;
     private int mCurrentPage = PagePos.EMPTY;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    private MyAdapter mAdapter;
     private boolean mIsVisible;
 
     private static final String EXTRA_FROM_TOAST = "from_toast";
@@ -77,6 +80,7 @@ public class DictionaryActivity extends ActionBarActivity {
             Analytics.trackAppLaunch(this);
         } else {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+            mAdapter.setSelectedPos(mCurrentPage);
         }
 
         if (!AppPreference.getShowedTutorial(this)) {
@@ -143,8 +147,8 @@ public class DictionaryActivity extends ActionBarActivity {
 
 
     private void selectDrawerItem(int pos) {
-//        mDrawerList.setItemChecked(pos, true);
         setTitle(ITEM_NAMES[pos]);
+        mAdapter.setSelectedPos(pos);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -188,7 +192,7 @@ public class DictionaryActivity extends ActionBarActivity {
             }
         };
 
-        MyAdapter mAdapter = new MyAdapter(texts, icons, onItemClickListener);
+        mAdapter = new MyAdapter(texts, icons, onItemClickListener);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -349,6 +353,7 @@ public class DictionaryActivity extends ActionBarActivity {
         private String[] mTexts;
         private int[] mImageRes;
         private OnItemClickListener mOnItemClickListener;
+        private int mSelectedPos;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -357,7 +362,8 @@ public class DictionaryActivity extends ActionBarActivity {
             // each data item is just a string in this case
             public TextView mTextView;
             public ImageView mImageView;
-
+            public View mParentView;
+            public StateListDrawable mDrawable;
             public ViewHolder(View v, final OnItemClickListener listener) {
                 super(v);
                 v.setOnClickListener(new View.OnClickListener() {
@@ -368,8 +374,8 @@ public class DictionaryActivity extends ActionBarActivity {
                 });
                 mTextView = (TextView) v.findViewById(R.id.text);
                 mImageView = (ImageView) v.findViewById(R.id.icon);
+                mParentView = v;
             }
-
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
@@ -377,6 +383,15 @@ public class DictionaryActivity extends ActionBarActivity {
             mTexts = text;
             mImageRes = imageRes;
             mOnItemClickListener = onItemClickListener;
+        }
+
+        public void setSelectedPos(int pos) {
+            mSelectedPos = pos;
+            notifyDataSetChanged();
+        }
+
+        public int getSelectedPos() {
+            return mSelectedPos;
         }
 
         // Create new views (invoked by the layout manager)
@@ -398,7 +413,7 @@ public class DictionaryActivity extends ActionBarActivity {
             // - replace the contents of the view with that element
             holder.mTextView.setText(mTexts[position]);
             holder.mImageView.setImageResource(mImageRes[position]);
-
+            holder.mParentView.setActivated(position == getSelectedPos());
         }
 
         // Return the size of your dataset (invoked by the layout manager)
