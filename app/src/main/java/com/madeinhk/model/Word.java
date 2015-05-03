@@ -9,9 +9,14 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.madeinhk.english_chinesedictionary.BuildConfig;
 
+import org.w3c.dom.Text;
+
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +33,10 @@ public class Word implements Parcelable {
         this.mWord = word;
         this.mPhoneticString = phoneticString;
         this.mTypeEntry = typeEntry;
+        Collections.sort(mTypeEntry);
     }
 
-    public static class TypeEntry implements Parcelable {
+    public static class TypeEntry implements Parcelable, Comparable<TypeEntry> {
         public String mMeaning;
         public char mType;
         public String mEngExample;
@@ -108,6 +114,29 @@ public class Word implements Parcelable {
                 return new TypeEntry[size];
             }
         };
+
+        @Override
+        public int compareTo(TypeEntry otherEntry) {
+            // Put N/A to the end of list
+            // TODO: no magic number
+            if (this.mType == '0' || this.mType == 'g') {
+                return 1;
+            }
+            if (otherEntry.mType == '0' || otherEntry.mType =='g') {
+                return -1;
+            }
+            // Assume the entry with example is more important
+            boolean thisEntryHasExample = !TextUtils.isEmpty(mEngExample);
+            boolean otherEntryHasExample = TextUtils.isEmpty(otherEntry.mEngExample);
+            if (thisEntryHasExample && !otherEntryHasExample) {
+                return -1;
+            }
+            if (!thisEntryHasExample && otherEntryHasExample) {
+                return 1;
+            }
+            // Assume the longer the description, the more important the entry is
+            return -(this.mMeaning.length() - otherEntry.mMeaning.length());
+        }
     }
 
     public static Word fromLookupResult(LookupResult lookupResult) {
@@ -120,7 +149,7 @@ public class Word implements Parcelable {
         Map<Character, String> meaningMap = parseString(meaningString);
         Map<Character, String> exampleMap = parseString(exampleString);
 
-        List<TypeEntry> entries = new ArrayList<TypeEntry>();
+        List<TypeEntry> entries = new ArrayList<>();
         for (Map.Entry<Character, String> entry : meaningMap.entrySet()) {
             TypeEntry tmp = new TypeEntry();
             tmp.mMeaning = entry.getValue();
