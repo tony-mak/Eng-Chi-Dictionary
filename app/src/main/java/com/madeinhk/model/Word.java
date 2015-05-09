@@ -127,7 +127,7 @@ public class Word implements Parcelable {
             }
             // Assume the entry with example is more important
             boolean thisEntryHasExample = !TextUtils.isEmpty(mEngExample);
-            boolean otherEntryHasExample = TextUtils.isEmpty(otherEntry.mEngExample);
+            boolean otherEntryHasExample = !TextUtils.isEmpty(otherEntry.mEngExample);
             if (thisEntryHasExample && !otherEntryHasExample) {
                 return -1;
             }
