@@ -6,22 +6,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,26 +37,35 @@ import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.utils.Analytics;
 
+import java.util.Stack;
+
 import de.greenrobot.event.EventBus;
 
 
-public class DictionaryActivity extends ActionBarActivity {
-    private static interface PagePos {
-        public static final int EMPTY = -1;
-        public static final int DICTIONARY = 0;
-        public static final int FAVOURITE = 1;
-        public static final int ABOUT = 2;
+public class DictionaryActivity extends AppCompatActivity {
+
+    private interface PagePos {
+        int EMPTY = -1;
+        int DICTIONARY = 0;
+        int FAVOURITE = 1;
+        int ABOUT = 2;
     }
 
     private static final String TAG = "DictionaryActivity";
     public static final String ACTION_VIEW_WORD = "android.intent.action.VIEW_WORD";
 
     private static final String KEY_CURRENT_PAGE = "current_page";
+    private static final String KEY_EXPANDED_SEARCH_VIEW = "expanded_search_view";
 
-    private static final String[] ITEM_NAMES = new String[]{"Dictionary", "Saved words", "About"};
+    private static final int[] ITEM_NAMES = new int[]{R.string.dictionary, R.string.favourites, R
+            .string.about};
     private DrawerLayout mDrawerLayout;
     private RecyclerView mDrawerList;
     private int mCurrentPage = PagePos.EMPTY;
+
+    private boolean mExpandedSearchView = false;
+    private String mWord;
+
     private ActionBarDrawerToggle mDrawerToggle;
 
     private MyAdapter mAdapter;
@@ -64,10 +73,13 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private static final String EXTRA_FROM_TOAST = "from_toast";
 
+    private BackStack mBackStack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBackStack = new BackStack();
+
         setContentView(R.layout.activity_dictionary);
 
         setupToolBar();
@@ -81,6 +93,7 @@ public class DictionaryActivity extends ActionBarActivity {
         } else {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
             mAdapter.setSelectedPos(mCurrentPage);
+            mExpandedSearchView = savedInstanceState.getBoolean(KEY_EXPANDED_SEARCH_VIEW);
         }
 
         if (!AppPreference.getShowedTutorial(this)) {
@@ -127,6 +140,8 @@ public class DictionaryActivity extends ActionBarActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
+        outState.putBoolean(KEY_EXPANDED_SEARCH_VIEW, mExpandedSearchView);
+
     }
 
     private void setupToolBar() {
@@ -138,13 +153,34 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private void showFragment(Fragment fragment, int page) {
         FragmentManager fragmentManager = DictionaryActivity.this.getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.animator.slide_from_bottom_in, R.animator.slide_from_bottom_out)
-                .replace(R.id.content, fragment)
-                .commit();
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.animator.slide_from_bottom_in, R.animator
+                        .slide_from_bottom_out)
+                .replace(R.id.content, fragment);
+        Fragment topFragment = fragmentManager.findFragmentById(R.id.content);
+
+        if (page == PagePos.FAVOURITE) {
+            mBackStack.clear();
+        }
+        if (mCurrentPage == PagePos.FAVOURITE && page == PagePos.DICTIONARY) {
+            mBackStack.push(topFragment);
+        }
+        transaction.commit();
         mCurrentPage = page;
     }
 
+    private int fragmentToPos(Fragment fragment) {
+        Class<? extends Fragment> fragmentClass = fragment.getClass();
+        if (fragmentClass.equals(DictionaryFragment.class)) {
+            return 0;
+        } else if (fragmentClass.equals(FavouriteFragment.class)) {
+            return 1;
+        } else if (fragmentClass.equals(AboutFragment.class)) {
+            return 2;
+        }
+        throw new IllegalArgumentException("Illegal fragment: " + fragment);
+    }
 
     private void selectDrawerItem(int pos) {
         setTitle(ITEM_NAMES[pos]);
@@ -167,8 +203,8 @@ public class DictionaryActivity extends ActionBarActivity {
         mDrawerList.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        String[] texts = new String[]{"Dictionary", "Saved words", "About"};
-        int[] icons = new int[]{R.drawable.ic_magnify_grey600_24dp, R.drawable.ic_star_grey600_24dp, R.drawable.ic_information_grey600_24dp};
+        int[] icons = new int[]{R.drawable.ic_magnify_grey600_24dp, R.drawable
+                .ic_star_grey600_24dp, R.drawable.ic_information_grey600_24dp};
 
 
         OnItemClickListener onItemClickListener = new OnItemClickListener() {
@@ -192,7 +228,7 @@ public class DictionaryActivity extends ActionBarActivity {
             }
         };
 
-        mAdapter = new MyAdapter(texts, icons, onItemClickListener);
+        mAdapter = new MyAdapter(ITEM_NAMES, icons, onItemClickListener);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -238,13 +274,13 @@ public class DictionaryActivity extends ActionBarActivity {
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
+        if (!mExpandedSearchView && TextUtils.isEmpty(mWord)) {
+            mExpandedSearchView = true;
+            MenuItemCompat.expandActionView(searchItem);
+        }
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-
-        if (mCurrentPage == PagePos.DICTIONARY && Intent.ACTION_MAIN.equals(getIntent().getAction())) {
-            searchItem.expandActionView();
-        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -275,7 +311,8 @@ public class DictionaryActivity extends ActionBarActivity {
 
     private void handleIntent(Intent intent) {
         String word = null;
-        if (Intent.ACTION_SEARCH.equals(intent.getAction()) || "com.google.android.gms.actions.SEARCH_ACTION".equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()) || ("com.google.android.gms.actions" +
+                ".SEARCH_ACTION").equals(intent.getAction())) {
             word = intent.getStringExtra(SearchManager.QUERY);
         } else if (ACTION_VIEW_WORD.equals(intent.getAction())) {
             Uri data = intent.getData();
@@ -286,6 +323,7 @@ public class DictionaryActivity extends ActionBarActivity {
     }
 
     private void showWord(String word) {
+        mWord = word;
         if (mCurrentPage != PagePos.DICTIONARY) {
             Fragment fragment = DictionaryFragment.newInstance(word);
             selectDrawerItem(PagePos.DICTIONARY);
@@ -294,7 +332,6 @@ public class DictionaryActivity extends ActionBarActivity {
             EventBus.getDefault().post(new DictionaryFragment.UpdateWordEvent(word));
         }
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -319,6 +356,19 @@ public class DictionaryActivity extends ActionBarActivity {
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBackStack.isEmpty()) {
+            super.onBackPressed();
+        } else {
+            Fragment fragment = mBackStack.pop();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content, fragment, null);
+            ft.commit();
+            selectDrawerItem(fragmentToPos(fragment));
+        }
     }
 
     public void onEvent(LookupWordEvent event) {
@@ -350,7 +400,7 @@ public class DictionaryActivity extends ActionBarActivity {
 
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private String[] mTexts;
+        private int[] mTexts;
         private int[] mImageRes;
         private OnItemClickListener mOnItemClickListener;
         private int mSelectedPos;
@@ -364,6 +414,7 @@ public class DictionaryActivity extends ActionBarActivity {
             public ImageView mImageView;
             public View mParentView;
             public StateListDrawable mDrawable;
+
             public ViewHolder(View v, final OnItemClickListener listener) {
                 super(v);
                 v.setOnClickListener(new View.OnClickListener() {
@@ -379,7 +430,7 @@ public class DictionaryActivity extends ActionBarActivity {
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(String[] text, int[] imageRes, OnItemClickListener onItemClickListener) {
+        public MyAdapter(int[] text, int[] imageRes, OnItemClickListener onItemClickListener) {
             mTexts = text;
             mImageRes = imageRes;
             mOnItemClickListener = onItemClickListener;
@@ -422,5 +473,30 @@ public class DictionaryActivity extends ActionBarActivity {
             return mTexts.length;
         }
     }
+
+    static class BackStack {
+        Stack<Fragment> mStack;
+
+        public BackStack() {
+            mStack = new Stack<Fragment>();
+        }
+
+        public void clear() {
+            mStack.clear();
+        }
+
+        public void push(Fragment fragment) {
+            mStack.push(fragment);
+        }
+
+        public Fragment pop() {
+            return mStack.pop();
+        }
+
+        public boolean isEmpty() {
+            return mStack.isEmpty();
+        }
+    }
+
 
 }

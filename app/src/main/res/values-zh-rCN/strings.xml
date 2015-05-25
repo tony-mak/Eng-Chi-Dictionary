@@ -11,5 +11,9 @@
 	<string name="try_to_save_some_word">尝试保存一些单词!</string>
 	<string name="save_word">保存它</string>
 	<string name="unsave_it">忘记它</string>
+	<string name="see_tut_title">你想要弄清楚如何使用这一程序？</string>
+	<string name="dictionary">词典</string>
+	<string name="favourites">收藏</string>
+	<string name="about">关于</string>
 
 </resources>

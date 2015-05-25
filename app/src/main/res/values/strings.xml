@@ -19,5 +19,8 @@
     <string name="unsave_it">Unsave it</string>
 
     <string name="see_tut_title">Do you want to figure out how to use this app?</string>
+    <string name="dictionary">Dictionary</string>
+    <string name="favourites">Favourites</string>
+    <string name="about">About</string>
 
 </resources>

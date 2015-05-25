@@ -11,5 +11,9 @@
 	<string name="try_to_save_some_word">いくつかの単語を保存しようとしてください ！</string>
 	<string name="save_word">それを保存します。</string>
 	<string name="unsave_it">それを保存しません。</string>
+	<string name="see_tut_title">このアプリを使用する方法を理解しますか。</string>
+	<string name="dictionary">辞書</string>
+	<string name="favourites">お気に入り</string>
+	<string name="about">について</string>
 
 </resources>

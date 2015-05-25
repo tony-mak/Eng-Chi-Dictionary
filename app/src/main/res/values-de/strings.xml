@@ -11,5 +11,9 @@
 	<string name="try_to_save_some_word">Versuchen Sie, einige Worte zu speichern!</string>
 	<string name="save_word">Speichern Sie es</string>
 	<string name="unsave_it">Unsave es</string>
+	<string name="see_tut_title">Möchten Sie herausfinden, wie man diese app verwenden?</string>
+	<string name="dictionary">Wörterbuch</string>
+	<string name="favourites">Favoriten</string>
+	<string name="about">Über</string>
 
 </resources>
