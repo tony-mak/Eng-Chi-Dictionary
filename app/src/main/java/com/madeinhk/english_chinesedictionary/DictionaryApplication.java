@@ -10,6 +10,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.utils.Obfuscator;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by tonymak on 8/12/14.
@@ -34,9 +35,8 @@ public class DictionaryApplication extends Application {
     }
 
     private void setupCrashlytics() {
-        if (!BuildConfig.DEBUG) {
-            Crashlytics.start(this);
-        }
+        Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
+        Fabric.with(this, crashlytics);
     }
 
     private void setupTracker() {
