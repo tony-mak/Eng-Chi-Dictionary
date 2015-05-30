@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,19 +17,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.madeinhk.app.AboutFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
@@ -43,6 +37,9 @@ import de.greenrobot.event.EventBus;
 
 
 public class DictionaryActivity extends AppCompatActivity {
+
+    private NavigationView mNavigationView;
+    private Toolbar mToolbar;
 
     private interface PagePos {
         int EMPTY = -1;
@@ -60,7 +57,6 @@ public class DictionaryActivity extends AppCompatActivity {
     private static final int[] ITEM_NAMES = new int[]{R.string.dictionary, R.string.favourites, R
             .string.about};
     private DrawerLayout mDrawerLayout;
-    private RecyclerView mDrawerList;
     private int mCurrentPage = PagePos.EMPTY;
 
     private boolean mExpandedSearchView = false;
@@ -68,7 +64,6 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private MyAdapter mAdapter;
     private boolean mIsVisible;
 
     private static final String EXTRA_FROM_TOAST = "from_toast";
@@ -84,6 +79,8 @@ public class DictionaryActivity extends AppCompatActivity {
 
         setupToolBar();
         setupDrawerLayout();
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        setupDrawerContent(mNavigationView);
 
         ClipboardService.start(this);
 
@@ -92,8 +89,8 @@ public class DictionaryActivity extends AppCompatActivity {
             Analytics.trackAppLaunch(this);
         } else {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
-            mAdapter.setSelectedPos(mCurrentPage);
             mExpandedSearchView = savedInstanceState.getBoolean(KEY_EXPANDED_SEARCH_VIEW);
+            selectDrawerItem(mCurrentPage);
         }
 
         if (!AppPreference.getShowedTutorial(this)) {
@@ -145,17 +142,38 @@ public class DictionaryActivity extends AppCompatActivity {
     }
 
     private void setupToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    private void selectDrawerItem(int pos) {
+        setTitle(ITEM_NAMES[pos]);
+        int menuItemId = pagePosToMenuId(pos);
+        MenuItem menuItem = mNavigationView.getMenu().findItem(menuItemId);
+        menuItem.setChecked(true);
+        mDrawerLayout.closeDrawers();
+
+    }
+
+    private int pagePosToMenuId(int pos) {
+        switch (pos) {
+            case PagePos.DICTIONARY:
+                return R.id.nav_dictionary;
+            case PagePos.FAVOURITE:
+                return R.id.nav_favourite;
+            case PagePos.ABOUT:
+                return R.id.nav_about;
+        }
+        throw new IllegalArgumentException("Invalid Pos");
     }
 
     private void showFragment(Fragment fragment, int page) {
         FragmentManager fragmentManager = DictionaryActivity.this.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fragmentManager
                 .beginTransaction()
-                .setCustomAnimations(R.animator.slide_from_bottom_in, R.animator
+                .setCustomAnimations(R.anim.slide_from_bottom_in, R.anim
                         .slide_from_bottom_out)
                 .replace(R.id.content, fragment);
         Fragment topFragment = fragmentManager.findFragmentById(R.id.content);
@@ -182,68 +200,62 @@ public class DictionaryActivity extends AppCompatActivity {
         throw new IllegalArgumentException("Illegal fragment: " + fragment);
     }
 
-    private void selectDrawerItem(int pos) {
-        setTitle(ITEM_NAMES[pos]);
-        mAdapter.setSelectedPos(pos);
-        mDrawerLayout.closeDrawer(mDrawerList);
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        Fragment fragment = null;
+                        int position = PagePos.EMPTY;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_dictionary:
+                                fragment = DictionaryFragment.newInstance(null);
+                                position = PagePos.DICTIONARY;
+                                break;
+                            case R.id.nav_favourite:
+                                fragment = FavouriteFragment.newInstance();
+                                position = PagePos.FAVOURITE;
+                                break;
+                            case R.id.nav_about:
+                                fragment = new AboutFragment();
+                                position = PagePos.ABOUT;
+                                break;
+                        }
+                        if (mCurrentPage != position) {
+                            showFragment(fragment, position);
+                        }
+                        return true;
+                    }
+                });
     }
+
 
     private void setupDrawerLayout() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (RecyclerView) findViewById(R.id.left_drawer);
-
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mDrawerList.setHasFixedSize(true);
-
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mDrawerList.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        int[] icons = new int[]{R.drawable.ic_magnify_grey600_24dp, R.drawable
-                .ic_star_grey600_24dp, R.drawable.ic_information_grey600_24dp};
-
-
-        OnItemClickListener onItemClickListener = new OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Fragment fragment = null;
-                switch (position) {
-                    case PagePos.DICTIONARY:
-                        fragment = DictionaryFragment.newInstance(null);
-                        break;
-                    case PagePos.FAVOURITE:
-                        fragment = FavouriteFragment.newInstance();
-                        break;
-                    case PagePos.ABOUT:
-                        fragment = new AboutFragment();
-                }
-                selectDrawerItem(position);
-                if (mCurrentPage != position) {
-                    showFragment(fragment, position);
-                }
-            }
-        };
-
-        mAdapter = new MyAdapter(ITEM_NAMES, icons, onItemClickListener);
-        mDrawerList.setAdapter(mAdapter);
-
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
+                mToolbar,
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
         ) {
 
-            /** Called when a drawer has settled in a completely closed state. */
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
             }
 
-            /** Called when a drawer has settled in a completely open state. */
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
             }
@@ -392,86 +404,6 @@ public class DictionaryActivity extends AppCompatActivity {
         intent.putExtra(SearchManager.QUERY, word);
         intent.putExtra(EXTRA_FROM_TOAST, true);
         return intent;
-    }
-
-    interface OnItemClickListener {
-        void onItemClick(View v, int position);
-    }
-
-
-    public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private int[] mTexts;
-        private int[] mImageRes;
-        private OnItemClickListener mOnItemClickListener;
-        private int mSelectedPos;
-
-        // Provide a reference to the views for each data item
-        // Complex data items may need more than one view per item, and
-        // you provide access to all the views for a data item in a view holder
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
-            public TextView mTextView;
-            public ImageView mImageView;
-            public View mParentView;
-            public StateListDrawable mDrawable;
-
-            public ViewHolder(View v, final OnItemClickListener listener) {
-                super(v);
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listener.onItemClick(v, getAdapterPosition());
-                    }
-                });
-                mTextView = (TextView) v.findViewById(R.id.text);
-                mImageView = (ImageView) v.findViewById(R.id.icon);
-                mParentView = v;
-            }
-        }
-
-        // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(int[] text, int[] imageRes, OnItemClickListener onItemClickListener) {
-            mTexts = text;
-            mImageRes = imageRes;
-            mOnItemClickListener = onItemClickListener;
-        }
-
-        public void setSelectedPos(int pos) {
-            mSelectedPos = pos;
-            notifyDataSetChanged();
-        }
-
-        public int getSelectedPos() {
-            return mSelectedPos;
-        }
-
-        // Create new views (invoked by the layout manager)
-        @Override
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                       int viewType) {
-            // create a new view
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.drawer_list_item, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v, mOnItemClickListener);
-            return vh;
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
-            holder.mTextView.setText(mTexts[position]);
-            holder.mImageView.setImageResource(mImageRes[position]);
-            holder.mParentView.setActivated(position == getSelectedPos());
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        @Override
-        public int getItemCount() {
-            return mTexts.length;
-        }
     }
 
     static class BackStack {

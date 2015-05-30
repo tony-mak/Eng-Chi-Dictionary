@@ -1,52 +1,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".DictionaryActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".DictionaryActivity">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
+        android:layout_height="match_parent"
 
-        android:layout_height="match_parent">
+        android:fitsSystemWindows="true">
         <!-- The main content view -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.Toolbar
                 android:id="@+id/my_awesome_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <FrameLayout
                 android:id="@+id/content"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></FrameLayout>
-
         </LinearLayout>
 
         <!-- The navigation drawer -->
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/left_drawer"
-            android:layout_width="240dp"
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="#FFF"
-            android:layout_gravity="left|start"
-            android:choiceMode="singleChoice"
+            android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            android:paddingTop="16dp"
-            android:divider="@null" />
-
-
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/drawer_view"/>
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>
