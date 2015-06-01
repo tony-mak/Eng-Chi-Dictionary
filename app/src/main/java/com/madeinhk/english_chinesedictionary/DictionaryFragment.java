@@ -28,6 +28,7 @@ import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
+import com.madeinhk.utils.ChineseUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -240,14 +241,14 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             for (Word.TypeEntry typeEntry : typeEntries) {
                 appendStyled(builder, typeEntry.getTypeDescription(), new ForegroundColorSpan(mAccentColor));
                 builder.append("\n");
-                builder.append(typeEntry.mMeaning);
+                builder.append(ChineseUtils.convertChineseIfNeeded(typeEntry.mMeaning));
                 builder.append("\n");
                 if (!TextUtils.isEmpty(typeEntry.mEngExample)) {
                     builder.append(Html.fromHtml(typeEntry.mEngExample));
                     builder.append("\n");
                 }
                 if (!TextUtils.isEmpty(typeEntry.mChiExample)) {
-                    builder.append(typeEntry.mChiExample);
+                    builder.append(ChineseUtils.convertChineseIfNeeded(typeEntry.mChiExample));
                     builder.append("\n");
                 }
                 builder.append("\n");
