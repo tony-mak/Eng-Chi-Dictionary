@@ -16,21 +16,32 @@ repositories {
 
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'madeinhk'
+            keyPassword 'madeinhk'
+            storeFile file('/home/tony/Downloads/madeinhk')
+            storePassword 'madeinhk'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.madeinhk.english_chinesedictionary"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 16
-        versionName "0.4"
+        versionCode 17
+        versionName "0.4.1"
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFile 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
 }
