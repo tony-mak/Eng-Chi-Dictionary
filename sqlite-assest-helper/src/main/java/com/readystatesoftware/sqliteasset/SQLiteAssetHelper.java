@@ -179,7 +179,9 @@ public class SQLiteAssetHelper extends SQLiteOpenHelper {
 
             // do force upgrade
             if (version != 0 && version < mForcedUpgradeVersion) {
+                onPreReplaceDatabase(db);
                 db = createOrOpenDatabase(true);
+                onPostReplaceDatabase(db);
                 db.setVersion(mNewVersion);
                 version = db.getVersion();
             }
@@ -412,6 +414,14 @@ public class SQLiteAssetHelper extends SQLiteOpenHelper {
             Log.w(TAG, "could not open database " + mName + " - " + e.getMessage());
             return null;
         }
+    }
+
+    protected void onPreReplaceDatabase(SQLiteDatabase db) {
+
+    }
+
+    protected  void onPostReplaceDatabase(SQLiteDatabase db) {
+
     }
 
     private void copyDatabaseFromAssets() throws SQLiteAssetException {

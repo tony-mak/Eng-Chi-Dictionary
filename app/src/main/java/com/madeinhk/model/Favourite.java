@@ -51,6 +51,12 @@ public class Favourite {
         }
     }
 
+    public static Favourite fromCursor(Cursor cursor) {
+        int index = cursor.getColumnIndex(COLUMNS.WORD);
+        String word = cursor.getString(index);
+        return new Favourite(NOT_SAVED, word);
+    }
+
 
     public static Favourite fromWord(Word word) {
         return new Favourite(NOT_SAVED, word.mWord);
