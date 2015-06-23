@@ -29,15 +29,15 @@ public class ECDictionary {
         mProviderClient = mContext.getContentResolver().acquireContentProviderClient(DictionaryContentProvider.AUTHORITY);
     }
 
-    public static interface COLUMNS {
-        public static final String _ID = BaseColumns._ID;
-        public static final String WORD = "word";
-        public static final String MEANING = "meaning";
-        public static final String PHONETIC_STRING = "phonetic_string";
-        public static final String EXAMPLE = "example";
-    }
+    public interface COLUMNS {
+        String _ID = BaseColumns._ID;
+        String WORD = "word";
+        String MEANING = "meaning";
+        String PHONETIC_STRING = "phonetic_string";
+        String EXAMPLE = "example";
+        String DIFFICULTY = "difficulty";
 
-    public static String[] ALL_COLUMNS = {COLUMNS._ID, COLUMNS.WORD, COLUMNS.MEANING, COLUMNS.PHONETIC_STRING, COLUMNS.EXAMPLE};
+    }
 
     public Word lookupFromId(String id) {
         Word word = null;
@@ -61,7 +61,9 @@ public class ECDictionary {
         String meaning = cursor.getString(2);
         String phoneticString = cursor.getString(3);
         String example = cursor.getString(4);
-        return Word.fromLookupResult(new LookupResult(dictWord, meaning, phoneticString, example));
+        int difficulty = cursor.getInt(5);
+        return Word.fromLookupResult(new LookupResult(dictWord, meaning, phoneticString, example,
+                difficulty));
     }
 
     public Word lookup(String word) {

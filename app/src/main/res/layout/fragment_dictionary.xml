@@ -1,17 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.madeinhk.english_chinesedictionary.DictionaryFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.madeinhk.english_chinesedictionary.DictionaryFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/left_right_padding"
         android:paddingRight="@dimen/left_right_padding"
-        android:paddingTop="@dimen/ui_spacing"
-        android:orientation="horizontal">
+        android:paddingTop="@dimen/ui_spacing">
 
         <TextView
             android:id="@+id/word"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_headline_material" />
+            android:textSize="@dimen/abc_text_size_headline_material"/>
 
 
         <ImageButton
@@ -30,8 +30,17 @@
             android:layout_marginLeft="8dp"
             android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_volume_high_black_24dp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
+
     </LinearLayout>
+
+    <com.madeinhk.view.LevelIndicator
+        android:id="@+id/commonness_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="150dp"
+        android:paddingLeft="@dimen/left_right_padding"
+        android:paddingRight="@dimen/left_right_padding"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,6 +56,7 @@
             android:paddingRight="@dimen/left_right_padding"
             android:paddingTop="@dimen/ui_spacing"
             android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_medium_material" />
+            android:textSize="@dimen/abc_text_size_medium_material"/>
     </ScrollView>
+
 </LinearLayout>

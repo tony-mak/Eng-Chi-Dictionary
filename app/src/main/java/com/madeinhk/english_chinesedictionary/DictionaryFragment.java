@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -29,6 +31,7 @@ import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
 import com.madeinhk.utils.ChineseUtils;
+import com.madeinhk.view.LevelIndicator;
 
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +53,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
     private TextView mWordTextView;
     private TextView mDetailTextView;
+    private LevelIndicator mCommonnessBar;
 
     private ImageButton mPronounceButton;
 
@@ -138,6 +142,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
         mWordTextView = (TextView) view.findViewById(R.id.word);
         mDetailTextView = (TextView) view.findViewById(R.id.detail);
+        mCommonnessBar = (LevelIndicator) view.findViewById(R.id.commonness_bar);
         return view;
     }
 
@@ -236,6 +241,12 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         updateFavouriteMenuItem(word);
         if (word != null) {
             mWordTextView.setText(word.mWord);
+            if (mWord.mDifficulty > 0 ) {
+                mCommonnessBar.setVisibility(View.VISIBLE);
+                mCommonnessBar.setLevel((5 - mWord.mDifficulty));
+            } else {
+                mCommonnessBar.setVisibility(View.GONE);
+            }
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
             SpannableStringBuilder builder = new SpannableStringBuilder();
             for (Word.TypeEntry typeEntry : typeEntries) {
@@ -258,6 +269,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             AppPreference.saveLastWord(mContext, word.mWord);
         } else {
             mWordTextView.setText("No such word :(");
+            mCommonnessBar.setVisibility(View.GONE);
             mDetailTextView.setText("");
             mPronounceButton.setVisibility(View.GONE);
         }

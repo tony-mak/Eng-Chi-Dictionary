@@ -28,11 +28,13 @@ public class Word implements Parcelable {
     public String mWord;
     public String mPhoneticString;
     public List<TypeEntry> mTypeEntry;
+    public int mDifficulty;
 
-    public Word(String word, String phoneticString, List<TypeEntry> typeEntry) {
+    public Word(String word, String phoneticString, List<TypeEntry> typeEntry, int difficulty) {
         this.mWord = word;
         this.mPhoneticString = phoneticString;
         this.mTypeEntry = typeEntry;
+        this.mDifficulty = difficulty;
         Collections.sort(mTypeEntry);
     }
 
@@ -145,6 +147,7 @@ public class Word implements Parcelable {
         String mPhoneticString = lookupResult.getPhoneticString();
         String meaningString = lookupResult.getMeaning();
         String exampleString = lookupResult.getExample();
+        int difficulty = lookupResult.getmDifficulty();
 
         Map<Character, String> meaningMap = parseString(meaningString);
         Map<Character, String> exampleMap = parseString(exampleString);
@@ -164,7 +167,7 @@ public class Word implements Parcelable {
             tmp.mType = entry.getKey();
             entries.add(tmp);
         }
-        return new Word(word, mPhoneticString, entries);
+        return new Word(word, mPhoneticString, entries, difficulty);
     }
 
     enum ParserState {
@@ -250,6 +253,7 @@ public class Word implements Parcelable {
         dest.writeString(this.mWord);
         dest.writeString(this.mPhoneticString);
         dest.writeTypedList(mTypeEntry);
+        dest.writeInt(mDifficulty);
     }
 
     private Word(Parcel in) {
@@ -257,6 +261,7 @@ public class Word implements Parcelable {
         this.mPhoneticString = in.readString();
         mTypeEntry = new ArrayList<>();
         in.readTypedList(mTypeEntry, TypeEntry.CREATOR);
+        mDifficulty = in.readInt();
     }
 
     public static final Parcelable.Creator<Word> CREATOR = new Parcelable.Creator<Word>() {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#FF0000</color>
+    <color name="orange">#FF7F00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="chartreuse">#7FFF00</color>
+    <color name="azure">#007FFF</color>
+    <color name="violet">#7F00FF</color>
+
+    <array name="levels">
+        <item>@color/chartreuse</item>
+        <item>@color/azure</item>
+        <item>@color/yellow</item>
+        <item>@color/orange</item>
+        <item>@color/red</item>
+    </array>
+</resources>

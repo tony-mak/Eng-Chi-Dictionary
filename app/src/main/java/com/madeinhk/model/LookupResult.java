@@ -9,12 +9,15 @@ public class LookupResult {
     private String mMeaning;
     private String mPhoneticString;
     private String mExample;
+    private  int mDifficulty;
 
-    public LookupResult(String word, String meaning, String phoneticString, String example) {
+    public LookupResult(String word, String meaning, String phoneticString, String example, int
+            difficulty) {
         this.mWord = word;
         this.mMeaning = meaning;
         this.mPhoneticString = phoneticString;
         this.mExample = example;
+        this.mDifficulty = difficulty;
     }
 
     @Override
@@ -24,6 +27,7 @@ public class LookupResult {
                 ", mMeaning='" + mMeaning + '\'' +
                 ", mPhoneticString='" + mPhoneticString + '\'' +
                 ", mExample='" + mExample + '\'' +
+                ", mDifficulty=" + mDifficulty +
                 '}';
     }
 
@@ -41,5 +45,9 @@ public class LookupResult {
 
     public String getExample() {
         return mExample;
+    }
+
+    public int getmDifficulty() {
+        return mDifficulty;
     }
 }
