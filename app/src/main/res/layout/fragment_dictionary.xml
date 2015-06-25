@@ -36,7 +36,7 @@
 
     <com.madeinhk.view.LevelIndicator
         android:id="@+id/commonness_bar"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:minWidth="150dp"
         android:paddingLeft="@dimen/left_right_padding"

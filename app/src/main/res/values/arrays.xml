@@ -8,10 +8,10 @@
     <color name="violet">#7F00FF</color>
 
     <array name="levels">
-        <item>@color/chartreuse</item>
-        <item>@color/azure</item>
-        <item>@color/yellow</item>
-        <item>@color/orange</item>
-        <item>@color/red</item>
+        <item>#FFCDD2</item>
+        <item>#E57373</item>
+        <item>#F44336</item>
+        <item>#D32F2F</item>
+        <item>#B71C1C</item>
     </array>
 </resources>

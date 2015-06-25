@@ -3,6 +3,7 @@ package com.madeinhk.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
@@ -15,6 +16,7 @@ import com.madeinhk.english_chinesedictionary.R;
 public class LevelIndicator extends View {
     private int[] mColors = new int[0];
     private int mLevel = 0;
+    private  int mBorderColor;
 
     public LevelIndicator(Context context) {
         this(context, null);
@@ -33,6 +35,7 @@ public class LevelIndicator extends View {
             if (id != 0) {
                 final int[] colors = a.getResources().getIntArray(id);
                 mColors = colors;
+                mBorderColor = getResources().getColor(R.color.colorPrimary);
             }
         } finally {
             a.recycle();
@@ -64,18 +67,20 @@ public class LevelIndicator extends View {
             Rect progressRect = new Rect();
             Paint progressPaint = new Paint();
             for (int i = 0; i < numberOfLevel; i++) {
+                progressPaint.setStyle(Paint.Style.FILL);
                 progressPaint.setColor(mColors[i]);
-                if (i <= mLevel) {
-                    progressPaint.setAlpha(255);
-                } else {
-                    progressPaint.setAlpha(10);
-                }
+
                 final int levelLeftOffset = ViewCompat.getPaddingStart(this) + levelWidth * i;
                 final int levelRightOffset = (i < numberOfLevel - 1) ? levelLeftOffset +
                         levelWidth : widgetWidth + ViewCompat.getPaddingEnd(this);
 
                 progressRect.set(levelLeftOffset, getPaddingTop(),
                         levelRightOffset, widgetHeight);
+                if (i <= mLevel) {
+                    canvas.drawRect(progressRect, progressPaint);
+                }
+                progressPaint.setStyle(Paint.Style.STROKE);
+                progressPaint.setColor(mBorderColor);
                 canvas.drawRect(progressRect, progressPaint);
             }
         }
