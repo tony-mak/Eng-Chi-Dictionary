@@ -7,7 +7,9 @@ package com.madeinhk.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -60,6 +62,7 @@ public class DictionaryDatabaseHelper extends SQLiteAssetHelper {
                 for (Favourite fav : mFavouriteList) {
                     db.insert(Favourite.TABLE_NAME, null, fav.toContentValues());
                 }
+                db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
             }
