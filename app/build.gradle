@@ -30,8 +30,8 @@ android {
         applicationId "com.madeinhk.english_chinesedictionary"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 17
-        versionName "0.4.1"
+        versionCode 18
+        versionName "0.5.0"
     }
     buildTypes {
         release {
