@@ -39,8 +39,10 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:minWidth="150dp"
+        android:layout_marginBottom="@dimen/ui_spacing"
         android:paddingLeft="@dimen/left_right_padding"
-        android:paddingRight="@dimen/left_right_padding"/>
+        android:paddingRight="@dimen/left_right_padding"
+        android:layout_marginTop="@dimen/ui_spacing"/>
 
     <ScrollView
         android:layout_width="match_parent"

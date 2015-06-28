@@ -15,5 +15,11 @@
 	<string name="dictionary">Wörterbuch</string>
 	<string name="favourites">Favoriten</string>
 	<string name="about">Über</string>
+	<string name="very_common_word">Sie sollten bereits wissen, dieses Wort.</string>
+	<string name="common_word">Eines der Top 1000 Wörter entfallen, dass 75 % der Nutzung.</string>
+	<string name="medium_word">Eines der oberen 7000 Wörter entfallen, die 90 % der Nutzung.</string>
+	<string name="rare_word">Dieses Wort ist nicht üblich.</string>
+	<string name="very_rare_word">Ein seltenes Wort.</string>
+	<string name="word_frequency">Word-Frequenz:</string>
 
 </resources>

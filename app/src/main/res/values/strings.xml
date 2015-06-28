@@ -22,5 +22,10 @@
     <string name="dictionary">Dictionary</string>
     <string name="favourites">Favourites</string>
     <string name="about">About</string>
-
+    <string name="very_common_word">You should already know this word.</string>
+    <string name="common_word">One of the top 1000 words that accounts for 75% of usage.</string>
+    <string name="medium_word">One of the top 7000 words that accounts for 90% of usage.</string>
+    <string name="rare_word">This word is not common.</string>
+    <string name="very_rare_word">A rare word.</string>
+    <string name="word_frequency">Word frequency:</string>
 </resources>

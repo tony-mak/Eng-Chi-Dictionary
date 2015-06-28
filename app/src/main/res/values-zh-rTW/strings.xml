@@ -15,5 +15,11 @@
 	<string name="dictionary">詞典</string>
 	<string name="favourites">收藏</string>
 	<string name="about">關於</string>
+	<string name="very_common_word">你應該已經知道這個詞。</string>
+	<string name="common_word">前 1000年詞之一，占 75%的使用率。</string>
+	<string name="medium_word">熱門 7000 詞彙之一，占 90%的使用率。</string>
+	<string name="rare_word">這個詞並不常見。</string>
+	<string name="very_rare_word">一個罕見的詞。</string>
+	<string name="word_frequency">常用度:</string>
 
 </resources>

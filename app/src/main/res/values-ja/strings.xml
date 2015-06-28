@@ -15,5 +15,11 @@
 	<string name="dictionary">辞書</string>
 	<string name="favourites">お気に入り</string>
 	<string name="about">について</string>
+	<string name="very_common_word">この単語をすでに知っている必要があります。</string>
+	<string name="common_word">使用量の 75% を占めるトップ 1000年の言葉の一つ。</string>
+	<string name="medium_word">使用量の 90% を占めるトップ 7000 言葉の一つ。</string>
+	<string name="rare_word">この言葉は一般的ではありません。</string>
+	<string name="very_rare_word">まれな単語。</string>
+	<string name="word_frequency">単語の出現頻度:</string>
 
 </resources>

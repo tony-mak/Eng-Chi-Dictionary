@@ -47,6 +47,10 @@ public class LevelIndicator extends View {
         invalidate();
     }
 
+    public int getLevel() {
+        return mLevel;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();

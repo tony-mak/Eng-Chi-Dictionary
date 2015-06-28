@@ -44,9 +44,13 @@ public class DictionaryDatabaseHelper extends SQLiteAssetHelper {
 
         public void exportFav(SQLiteDatabase db) {
             Cursor c = db.query(Favourite.TABLE_NAME, null, null, null, null, null, null);
-            c.getColumnIndex(Favourite.COLUMNS.WORD);
-            while (c.moveToNext()) {
-                mFavouriteList.add(Favourite.fromCursor(c));
+            try {
+                c.getColumnIndex(Favourite.COLUMNS.WORD);
+                while (c.moveToNext()) {
+                    mFavouriteList.add(Favourite.fromCursor(c));
+                }
+            } finally {
+                c.close();
             }
         }
 
@@ -59,6 +63,7 @@ public class DictionaryDatabaseHelper extends SQLiteAssetHelper {
             } finally {
                 db.endTransaction();
             }
+            mFavouriteList.clear();
         }
     }
 }

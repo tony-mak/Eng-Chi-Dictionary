@@ -121,8 +121,17 @@ public class DictionaryHeadService extends Service {
                 }
             });
         }
-
-        mTextView.setText(mWord.mTypeEntry.get(0).mMeaning);
+        StringBuilder sb = new StringBuilder();
+        if (mWord.mDifficulty > 0) {
+            sb.append(this.getString(R.string.word_frequency)).append(" ");
+            int commonness = 5 - mWord.mDifficulty;
+            for (int i = 0; i <= commonness; i++) {
+                sb.append("*");
+            }
+            sb.append("\n");
+        }
+        sb.append(mWord.mTypeEntry.get(0).mMeaning);
+        mTextView.setText(sb.toString());
 
 
         final Favourite favourite = Favourite.fromWord(mWord);

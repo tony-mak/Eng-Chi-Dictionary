@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.madeinhk.model.AppPreference;
@@ -143,6 +144,30 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         mWordTextView = (TextView) view.findViewById(R.id.word);
         mDetailTextView = (TextView) view.findViewById(R.id.detail);
         mCommonnessBar = (LevelIndicator) view.findViewById(R.id.commonness_bar);
+        mCommonnessBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int stringResId = R.string.common_word;
+                switch (mCommonnessBar.getLevel()) {
+                    case 0:
+                        stringResId = R.string.very_rare_word;
+                        break;
+                    case 1:
+                        stringResId = R.string.rare_word;
+                        break;
+                    case 2:
+                        stringResId = R.string.medium_word;
+                        break;
+                    case 3:
+                        stringResId = R.string.common_word;
+                        break;
+                    case 4:
+                        stringResId = R.string.very_common_word;
+                        break;
+                }
+                Toast.makeText(mContext, stringResId, Toast.LENGTH_LONG).show();
+            }
+        });
         return view;
     }
 
@@ -224,7 +249,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             if (word != null) {
                 Favourite favourite = Favourite.fromWord(word);
                 boolean alreadyMarked = favourite.isExists(mContext);
-                mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R.drawable.ic_star_outline_white_48dp);
+                mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R
+                        .drawable.ic_star_outline_white_48dp);
                 mFavouriteItem.setTitle(alreadyMarked ? R.string.unsave_it : R.string.save_word);
                 mFavouriteItem.setChecked(alreadyMarked);
                 mFavouriteItem.setVisible(true);
@@ -241,7 +267,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         updateFavouriteMenuItem(word);
         if (word != null) {
             mWordTextView.setText(word.mWord);
-            if (mWord.mDifficulty > 0 ) {
+            if (mWord.mDifficulty > 0) {
                 mCommonnessBar.setVisibility(View.VISIBLE);
                 mCommonnessBar.setLevel((5 - mWord.mDifficulty));
             } else {
@@ -250,7 +276,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
             SpannableStringBuilder builder = new SpannableStringBuilder();
             for (Word.TypeEntry typeEntry : typeEntries) {
-                appendStyled(builder, typeEntry.getTypeDescription(), new ForegroundColorSpan(mAccentColor));
+                appendStyled(builder, typeEntry.getTypeDescription(), new ForegroundColorSpan
+                        (mAccentColor));
                 builder.append("\n");
                 builder.append(ChineseUtils.convertChineseIfNeeded(typeEntry.mMeaning));
                 builder.append("\n");
