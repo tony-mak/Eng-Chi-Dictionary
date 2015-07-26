@@ -4,15 +4,17 @@ package com.madeinhk.english_chinesedictionary;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.LeadingMarginSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +64,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     private Context mContext;
     private int mAccentColor;
     private MenuItem mFavouriteItem;
+
+    private Typeface sNotoFont;
 
     public DictionaryFragment() {
         // Required empty public constructor
@@ -143,6 +145,12 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
         mWordTextView = (TextView) view.findViewById(R.id.word);
         mDetailTextView = (TextView) view.findViewById(R.id.detail);
+
+        if (sNotoFont == null) {
+            sNotoFont = Typeface.createFromAsset(mContext.getAssets(), "NotoSans-Regular.ttf");
+        }
+        mDetailTextView.setTypeface(sNotoFont);
+
         mCommonnessBar = (LevelIndicator) view.findViewById(R.id.commonness_bar);
         mCommonnessBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +248,18 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     private void appendStyled(SpannableStringBuilder builder, String str, Object... spans) {
         builder.append(str);
         for (Object span : spans) {
-            builder.setSpan(span, builder.length() - str.length(), builder.length(), 0);
+            builder.setSpan(span, builder.length() - str.length(), builder.length(), Spanned
+                    .SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+    }
+
+    private void boldKeyWord(SpannableStringBuilder builder, String str, String keyword) {
+        int index = str.indexOf(keyword);
+        if (index != -1) {
+            int start = builder.length() - str.length() + index;
+            int end = start + keyword.length();
+            builder.setSpan(new android.text.style.StyleSpan
+                    (Typeface.BOLD_ITALIC), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
     }
 
@@ -262,6 +281,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
+    final static int INDENTATION_MEANING_LEFT = 50;
+    final static int INDENTATION_EXAMPLE_LEFT = 130;
     private void buildHtmlFromDictionary(Word word) {
         mWord = word;
         updateFavouriteMenuItem(word);
@@ -275,21 +296,32 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             }
             List<Word.TypeEntry> typeEntries = word.mTypeEntry;
             SpannableStringBuilder builder = new SpannableStringBuilder();
+            int prevType = -1;
+            boolean firstEntry = true;
             for (Word.TypeEntry typeEntry : typeEntries) {
-                appendStyled(builder, typeEntry.getTypeDescription(), new ForegroundColorSpan
-                        (mAccentColor));
-                builder.append("\n");
-                builder.append(ChineseUtils.convertChineseIfNeeded(typeEntry.mMeaning));
-                builder.append("\n");
+                if (prevType != typeEntry.mType) {
+                    if (!firstEntry) {
+                        builder.append("\n");
+                    }
+                    firstEntry = false;
+                    appendStyled(builder, typeEntry.getTypeDescription() + "\n", new
+                            ForegroundColorSpan(mAccentColor));
+                    prevType = typeEntry.mType;
+                }
+                appendStyled(builder, "▶ " +  ChineseUtils.convertChineseIfNeeded(typeEntry
+                        .mMeaning) + "\n", new android.text.style.StyleSpan
+                        (android.graphics.Typeface.BOLD), new LeadingMarginSpan
+                        .Standard(INDENTATION_MEANING_LEFT, INDENTATION_EXAMPLE_LEFT));
+
                 if (!TextUtils.isEmpty(typeEntry.mEngExample)) {
-                    builder.append(Html.fromHtml(typeEntry.mEngExample));
-                    builder.append("\n");
+                    appendStyled(builder, typeEntry.mEngExample + "\n", new LeadingMarginSpan
+                            .Standard(INDENTATION_EXAMPLE_LEFT));
+                    boldKeyWord(builder, typeEntry.mEngExample + "\n", word.mWord);
                 }
                 if (!TextUtils.isEmpty(typeEntry.mChiExample)) {
-                    builder.append(ChineseUtils.convertChineseIfNeeded(typeEntry.mChiExample));
-                    builder.append("\n");
+                    appendStyled(builder, typeEntry.mChiExample + "\n", new LeadingMarginSpan
+                            .Standard(INDENTATION_EXAMPLE_LEFT));
                 }
-                builder.append("\n");
             }
             mDetailTextView.setText(builder);
             mPronounceButton.setVisibility(View.VISIBLE);

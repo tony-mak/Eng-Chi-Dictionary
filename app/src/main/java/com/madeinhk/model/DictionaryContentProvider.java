@@ -84,8 +84,12 @@ public class DictionaryContentProvider extends ContentProvider {
                 MatrixCursor mc = new MatrixCursor(new String[]{"_id", "suggest_intent_data_id", "suggest_text_1", "suggest_text_2"});
                 try {
                     while (cursor.moveToNext()) {
-                        String strippedMeaning = cursor.getString(2).replaceAll("&&[0-9a-z]", "");
-                        mc.addRow(new Object[]{cursor.getString(0), cursor.getString(0), cursor.getString(1), strippedMeaning});
+                        String meaningString = cursor.getString(2);
+                        if (!TextUtils.isEmpty(meaningString)) {
+                            String strippedMeaning = meaningString.split("\\|")[1];
+                            mc.addRow(new Object[]{cursor.getString(0), cursor.getString(0), cursor
+                                    .getString(1), strippedMeaning});
+                        }
                     }
                 } finally {
                     cursor.close();

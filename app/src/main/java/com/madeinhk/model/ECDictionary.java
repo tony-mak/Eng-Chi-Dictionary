@@ -15,18 +15,22 @@ import java.util.List;
  */
 public class ECDictionary {
     public static final String TABLE_NAME = "ecdict";
-    private static final Uri sBaseUri = Uri.parse("content://" + DictionaryContentProvider.AUTHORITY);
+    private static final Uri sBaseUri = Uri.parse("content://" + DictionaryContentProvider
+            .AUTHORITY);
     private static final Uri sEngToChiUri = sBaseUri.buildUpon().appendPath("by_word").build();
     private static final Uri sWordFromIdUri = sBaseUri.buildUpon().appendPath("by_id").build();
-    private static final Uri sAutoCompleteUri = sBaseUri.buildUpon().appendPath("autocomplete").build();
-    private static final Uri FAVOURITE_WORD_URI = sBaseUri.buildUpon().appendPath("favourite_words").build();
+    private static final Uri sAutoCompleteUri = sBaseUri.buildUpon().appendPath("autocomplete")
+            .build();
+    private static final Uri FAVOURITE_WORD_URI = sBaseUri.buildUpon().appendPath
+            ("favourite_words").build();
 
     private Context mContext;
     private ContentProviderClient mProviderClient;
 
     public ECDictionary(Context context) {
         mContext = context.getApplicationContext();
-        mProviderClient = mContext.getContentResolver().acquireContentProviderClient(DictionaryContentProvider.AUTHORITY);
+        mProviderClient = mContext.getContentResolver().acquireContentProviderClient
+                (DictionaryContentProvider.AUTHORITY);
     }
 
     public interface COLUMNS {
@@ -87,7 +91,8 @@ public class ECDictionary {
     }
 
     public List<Word> getAllFavouriteWords() {
-        Cursor cursor = mContext.getContentResolver().query(FAVOURITE_WORD_URI, null, null, null, null);
+        Cursor cursor = mContext.getContentResolver().query(FAVOURITE_WORD_URI, null, null, null,
+                null);
         List<Word> wordList = new ArrayList<Word>();
         while (cursor.moveToNext()) {
             wordList.add(fromCursor(cursor));
