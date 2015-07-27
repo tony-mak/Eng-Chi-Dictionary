@@ -125,8 +125,12 @@ public class DictionaryHeadService extends Service {
         if (mWord.mDifficulty > 0) {
             sb.append(this.getString(R.string.word_frequency)).append(" ");
             int commonness = 5 - mWord.mDifficulty;
-            for (int i = 0; i <= commonness; i++) {
-                sb.append("*");
+            for (int i = 0; i <5; i++) {
+                if (i <= commonness) {
+                    sb.append('★');
+                } else {
+                    sb.append('☆');
+                }
             }
             sb.append("\n");
         }

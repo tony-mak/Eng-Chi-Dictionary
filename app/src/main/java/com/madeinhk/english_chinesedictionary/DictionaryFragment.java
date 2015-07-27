@@ -259,7 +259,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             int start = builder.length() - str.length() + index;
             int end = start + keyword.length();
             builder.setSpan(new android.text.style.StyleSpan
-                    (Typeface.BOLD_ITALIC), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    (Typeface.BOLD), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
     }
 
@@ -308,9 +308,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                             ForegroundColorSpan(mAccentColor));
                     prevType = typeEntry.mType;
                 }
-                appendStyled(builder, "▶ " +  ChineseUtils.convertChineseIfNeeded(typeEntry
-                        .mMeaning) + "\n", new android.text.style.StyleSpan
-                        (android.graphics.Typeface.BOLD), new LeadingMarginSpan
+                appendStyled(builder, "• " +  ChineseUtils.convertChineseIfNeeded(typeEntry
+                        .mMeaning) + "\n", new LeadingMarginSpan
                         .Standard(INDENTATION_MEANING_LEFT, INDENTATION_EXAMPLE_LEFT));
 
                 if (!TextUtils.isEmpty(typeEntry.mEngExample)) {
