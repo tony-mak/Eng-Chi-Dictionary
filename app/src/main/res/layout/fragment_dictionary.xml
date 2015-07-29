@@ -1,65 +1,84 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.madeinhk.english_chinesedictionary.DictionaryFragment">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.madeinhk.english_chinesedictionary.DictionaryFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/left_right_padding"
-        android:paddingRight="@dimen/left_right_padding"
-        android:paddingTop="@dimen/ui_spacing">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/word"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_headline_material"/>
-
-
-        <ImageButton
-            android:id="@+id/pronounce"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_volume_high_black_24dp"
-            android:visibility="gone"/>
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/left_right_padding"
+            android:paddingRight="@dimen/left_right_padding"
+            android:paddingTop="@dimen/ui_spacing">
+
+            <TextView
+                android:id="@+id/word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/primary_text_default_material_light"
+                android:textSize="@dimen/abc_text_size_headline_material" />
+
+
+            <ImageButton
+                android:id="@+id/pronounce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_volume_high_black_24dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <com.madeinhk.view.LevelIndicator
+            android:id="@+id/commonness_bar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing"
+            android:layout_marginTop="@dimen/ui_spacing"
+            android:minWidth="150dp"
+            android:paddingLeft="@dimen/left_right_padding"
+            android:paddingRight="@dimen/left_right_padding"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:requiresFadingEdge="vertical">
+
+            <TextView
+                android:id="@+id/detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/ui_spacing"
+                android:paddingLeft="@dimen/left_right_padding"
+                android:paddingRight="@dimen/left_right_padding"
+                android:paddingTop="@dimen/ui_spacing"
+                android:textColor="@color/primary_text_default_material_light"
+                android:textSize="@dimen/abc_text_size_medium_material" />
+        </ScrollView>
 
     </LinearLayout>
 
-    <com.madeinhk.view.LevelIndicator
-        android:id="@+id/commonness_bar"
-        android:layout_width="150dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fav_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/ui_spacing"
-        android:layout_marginTop="@dimen/ui_spacing"
-        android:minWidth="150dp"
-        android:paddingLeft="@dimen/left_right_padding"
-        android:paddingRight="@dimen/left_right_padding"
-        android:visibility="gone"/>
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/ic_star_outline_white_48dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:requiresFadingEdge="vertical">
-
-        <TextView
-            android:id="@+id/detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/ui_spacing"
-            android:paddingLeft="@dimen/left_right_padding"
-            android:paddingRight="@dimen/left_right_padding"
-            android:paddingTop="@dimen/ui_spacing"
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_medium_material"/>
-    </ScrollView>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -9,6 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -19,14 +22,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
@@ -55,6 +55,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     private TextView mWordTextView;
     private TextView mDetailTextView;
     private LevelIndicator mCommonnessBar;
+    private CoordinatorLayout mRootView;
 
     private ImageButton mPronounceButton;
 
@@ -63,8 +64,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     private Word mWord;
     private Context mContext;
     private int mAccentColor;
-    private MenuItem mFavouriteItem;
-
+    private FloatingActionButton mFavButton;
     private Typeface sNotoFont;
 
     public DictionaryFragment() {
@@ -141,6 +141,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
+        mRootView = (CoordinatorLayout) view.findViewById(R.id.rootLayout);
         mPronounceButton = (ImageButton) view.findViewById(R.id.pronounce);
 
         mWordTextView = (TextView) view.findViewById(R.id.word);
@@ -173,7 +174,22 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                         stringResId = R.string.very_common_word;
                         break;
                 }
-                Toast.makeText(mContext, stringResId, Toast.LENGTH_LONG).show();
+                Snackbar.make(mRootView, stringResId, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        mFavButton = (FloatingActionButton) view.findViewById(R.id.fav_button);
+        mFavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Favourite fav = Favourite.fromWord(mWord);
+                boolean isFav = fav.isExists(mContext);
+                if (isFav) {
+                    fav.delete(mContext);
+                } else {
+                    fav.save(mContext);
+                }
+                updateFavFab(mWord);
             }
         });
         return view;
@@ -263,21 +279,15 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
-    private void updateFavouriteMenuItem(Word word) {
-        if (mFavouriteItem != null) {
-            if (word != null) {
-                Favourite favourite = Favourite.fromWord(word);
-                boolean alreadyMarked = favourite.isExists(mContext);
-                mFavouriteItem.setIcon((alreadyMarked) ? R.drawable.ic_star_white_48dp : R
-                        .drawable.ic_star_outline_white_48dp);
-                mFavouriteItem.setTitle(alreadyMarked ? R.string.unsave_it : R.string.save_word);
-                mFavouriteItem.setChecked(alreadyMarked);
-                mFavouriteItem.setVisible(true);
-            } else {
-                mFavouriteItem.setVisible(false);
-            }
+    private void updateFavFab(Word word) {
+        if (word != null) {
+            Favourite favourite = Favourite.fromWord(word);
+            boolean alreadyMarked = favourite.isExists(mContext);
+            mFavButton.setImageResource((alreadyMarked) ? R.drawable.ic_favorite_white_48dp : R
+                    .drawable.ic_favorite_border_white_48dp);
+            mFavButton.show();
         } else {
-            Crashlytics.logException(new Exception("mFavouriteItem is null"));
+            mFavButton.hide();
         }
     }
 
@@ -285,7 +295,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     final static int INDENTATION_EXAMPLE_LEFT = 130;
     private void buildHtmlFromDictionary(Word word) {
         mWord = word;
-        updateFavouriteMenuItem(word);
+        updateFavFab(word);
         if (word != null) {
             mWordTextView.setText(word.mWord);
             if (mWord.mDifficulty > 0) {
@@ -336,32 +346,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.word, menu);
-        mFavouriteItem = menu.findItem(R.id.favourite);
     }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        updateFavouriteMenuItem(mWord);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.favourite:
-                if (item.isChecked()) {
-                    Favourite.fromWord(mWord).delete(mContext);
-                } else {
-                    Favourite.fromWord(mWord).save(mContext);
-                }
-                updateFavouriteMenuItem(mWord);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -387,5 +372,4 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             executeQueryTask(word);
         }
     }
-
 }
