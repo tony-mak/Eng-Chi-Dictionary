@@ -69,6 +69,26 @@ public class Word implements Parcelable {
         }
     };
 
+    private static final int MAX_LENGTH = 20;
+    public String buildMeaningSummary() {
+        StringBuilder sb = new StringBuilder();
+        boolean isFirstItem = true;
+        for (TypeEntry entry : mTypeEntry) {
+            if (!isFirstItem) {
+                sb.append(';');
+            } else {
+                isFirstItem = false;
+            }
+
+            sb.append(entry.mMeaning);
+            if (sb.length() > MAX_LENGTH) {
+                break;
+            }
+        }
+        return sb.toString();
+    }
+
+
     public static class TypeEntry implements Parcelable, Comparable<TypeEntry> {
         public int mType;
         public String mEngExample;

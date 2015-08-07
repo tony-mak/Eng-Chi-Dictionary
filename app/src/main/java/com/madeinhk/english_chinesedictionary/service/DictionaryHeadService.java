@@ -134,7 +134,7 @@ public class DictionaryHeadService extends Service {
             }
             sb.append("\n");
         }
-        sb.append(mWord.mTypeEntry.get(0).mMeaning);
+        sb.append(mWord.buildMeaningSummary());
         mTextView.setText(sb.toString());
 
 
