@@ -314,8 +314,9 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                         builder.append("\n");
                     }
                     firstEntry = false;
-                    appendStyled(builder, typeEntry.getTypeDescription() + "\n", new
-                            ForegroundColorSpan(mAccentColor));
+                    appendStyled(builder, ChineseUtils.convertChineseIfNeeded(
+                            typeEntry.getTypeDescription()) + "\n",
+                            new ForegroundColorSpan(mAccentColor));
                     prevType = typeEntry.mType;
                 }
                 appendStyled(builder, "• " +  ChineseUtils.convertChineseIfNeeded(typeEntry
@@ -328,8 +329,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                     boldKeyWord(builder, typeEntry.mEngExample + "\n", word.mWord);
                 }
                 if (!TextUtils.isEmpty(typeEntry.mChiExample)) {
-                    appendStyled(builder, typeEntry.mChiExample + "\n", new LeadingMarginSpan
-                            .Standard(INDENTATION_EXAMPLE_LEFT));
+                    appendStyled(builder, ChineseUtils.convertChineseIfNeeded(typeEntry.mChiExample)
+                            + "\n", new LeadingMarginSpan.Standard(INDENTATION_EXAMPLE_LEFT));
                 }
             }
             mDetailTextView.setText(builder);
