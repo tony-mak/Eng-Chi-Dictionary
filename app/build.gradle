@@ -16,6 +16,7 @@ repositories {
 
 
 android {
+    useLibrary 'org.apache.http.legacy'
     signingConfigs {
         release {
             keyAlias 'madeinhk'
@@ -24,14 +25,14 @@ android {
             storePassword 'madeinhk'
         }
     }
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "com.madeinhk.english_chinesedictionary"
         minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 20
-        versionName "0.6.1"
+        targetSdkVersion 23
+        versionCode 22
+        versionName "0.6.2"
     }
     buildTypes {
         release {
