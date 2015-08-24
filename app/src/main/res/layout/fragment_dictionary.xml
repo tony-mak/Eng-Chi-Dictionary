@@ -40,6 +40,15 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/phonetic_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/left_right_padding"
+            android:paddingRight="@dimen/left_right_padding"
+            android:textColor="#5C6BC0"
+            android:textSize="@dimen/abc_text_size_small_material" />
+
         <com.madeinhk.view.LevelIndicator
             android:id="@+id/commonness_bar"
             android:layout_width="150dp"

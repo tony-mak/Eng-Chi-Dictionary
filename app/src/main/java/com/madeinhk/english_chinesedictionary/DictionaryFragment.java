@@ -18,6 +18,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,6 +55,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
     private TextView mWordTextView;
     private TextView mDetailTextView;
+    private TextView mPhoneticTextView;
     private LevelIndicator mCommonnessBar;
     private CoordinatorLayout mRootView;
 
@@ -145,6 +147,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         mPronounceButton = (ImageButton) view.findViewById(R.id.pronounce);
 
         mWordTextView = (TextView) view.findViewById(R.id.word);
+        mPhoneticTextView = (TextView) view.findViewById(R.id.phonetic_string);
         mDetailTextView = (TextView) view.findViewById(R.id.detail);
 
         if (sNotoFont == null) {
@@ -298,6 +301,11 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         updateFavFab(word);
         if (word != null) {
             mWordTextView.setText(word.mWord);
+
+            if (!TextUtils.isEmpty(mWord.mPhoneticString)) {
+                mPhoneticTextView.setText(mWord.mPhoneticString);
+            }
+
             if (mWord.mDifficulty > 0) {
                 mCommonnessBar.setVisibility(View.VISIBLE);
                 mCommonnessBar.setLevel((5 - mWord.mDifficulty));
