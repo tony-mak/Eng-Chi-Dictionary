@@ -1,1 +1,1 @@
-include ':app', ':sqlite-assest-helper'
+include ':app', ':sqlite-assest-helper', ':backend'
