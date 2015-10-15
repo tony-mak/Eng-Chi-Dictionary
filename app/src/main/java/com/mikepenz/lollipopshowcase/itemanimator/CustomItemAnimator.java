@@ -13,8 +13,8 @@ import java.util.List;
 
 public class CustomItemAnimator extends RecyclerView.ItemAnimator {
 
-    List<RecyclerView.ViewHolder> mPendingAdd = new ArrayList<RecyclerView.ViewHolder>();
-    List<RecyclerView.ViewHolder> mPendingRemove = new ArrayList<RecyclerView.ViewHolder>();
+    List<RecyclerView.ViewHolder> mPendingAdd = new ArrayList<>();
+    List<RecyclerView.ViewHolder> mPendingRemove = new ArrayList<>();
 
     @Override
     public void runPendingAnimations() {
@@ -28,7 +28,8 @@ public class CustomItemAnimator extends RecyclerView.ItemAnimator {
                 AnimatorSet animator = new AnimatorSet();
 
                 animator.playTogether(
-                        ObjectAnimator.ofFloat(target, "translationX", -target.getMeasuredWidth(), 0.0f),
+                        ObjectAnimator.ofFloat(target, "translationX", - target.getMeasuredWidth(),
+                                0.0f),
                         ObjectAnimator.ofFloat(target, "alpha", target.getAlpha(), 1.0f)
                 );
 
@@ -69,7 +70,8 @@ public class CustomItemAnimator extends RecyclerView.ItemAnimator {
                 AnimatorSet animator = new AnimatorSet();
 
                 animator.playTogether(
-                        ObjectAnimator.ofFloat(target, "translationX", 0.0f, target.getMeasuredWidth()),
+                        ObjectAnimator.ofFloat(target, "translationX", 0.0f,
+                                target.getMeasuredWidth()),
                         ObjectAnimator.ofFloat(target, "alpha", target.getAlpha(), 0.0f)
                 );
 
@@ -83,24 +85,31 @@ public class CustomItemAnimator extends RecyclerView.ItemAnimator {
     }
 
     @Override
-    public boolean animateRemove(RecyclerView.ViewHolder viewHolder) {
+    public boolean animateDisappearance(RecyclerView.ViewHolder viewHolder,
+                                        RecyclerView.ItemAnimator.ItemHolderInfo preLayoutInfo,
+                                        RecyclerView.ItemAnimator.ItemHolderInfo postLayoutInfo) {
         mPendingRemove.add(viewHolder);
         return false;
     }
 
     @Override
-    public boolean animateAdd(RecyclerView.ViewHolder viewHolder) {
+    public boolean animateAppearance(RecyclerView.ViewHolder viewHolder,
+                                     ItemHolderInfo preLayoutInfo, ItemHolderInfo postLayoutInfo) {
         viewHolder.itemView.setAlpha(0.0f);
         return mPendingAdd.add(viewHolder);
     }
 
     @Override
-    public boolean animateMove(RecyclerView.ViewHolder viewHolder, int i, int i2, int i3, int i4) {
+    public boolean animatePersistence(RecyclerView.ViewHolder viewHolder,
+                                      ItemHolderInfo preLayoutInfo, ItemHolderInfo postLayoutInfo) {
         return false;
     }
 
     @Override
-    public boolean animateChange(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder2, int i, int i2, int i3, int i4) {
+    public boolean animateChange(RecyclerView.ViewHolder oldHolder,
+                                 RecyclerView.ViewHolder newHolder,
+                                 RecyclerView.ItemAnimator.ItemHolderInfo preLayoutInfo,
+                                 RecyclerView.ItemAnimator.ItemHolderInfo postLayoutInfo) {
         return false;
     }
 
