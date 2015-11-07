@@ -12,6 +12,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.madeinhk.utils.ArrayUtils;
+import com.madeinhk.utils.EditDistanceCalculator;
+import com.madeinhk.utils.SimilarWordGenerator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by tonymak on 10/9/14.
  */
@@ -57,49 +65,104 @@ public class DictionaryContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+                        String sortOrder) {
         int code = sUriMatcher.match(uri);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String table = TABLE_NAMES.get(code);
 
         switch (code) {
-            case BY_WORD:
+            case BY_WORD: {
+
                 String word = uri.getLastPathSegment();
-                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=?", new String[]{word}, null, null, sortOrder);
-            case BY_ID:
+                return db.query(table, projection, ECDictionary.COLUMNS.WORD + "=?",
+                        new String[]{word}, null, null, sortOrder);
+            }
+            case BY_ID: {
                 String id = uri.getLastPathSegment();
-                return db.query(table, projection, ECDictionary.COLUMNS._ID + "=?", new String[]{id}, null, null, sortOrder);
-            case FAVOURITE:
+                return db
+                        .query(table, projection, ECDictionary.COLUMNS._ID + "=?", new String[]{id},
+                                null, null, sortOrder);
+            }
+            case FAVOURITE: {
                 return db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
-            case WORD_SUGGESTION:
-                String limit = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
-                if (TextUtils.isEmpty(limit)) {
-                    limit = "5";
+            }
+            case WORD_SUGGESTION: {
+                // Ignore the limit parameter and hardcode to be five.
+                String limit = "15";
+                String query = selectionArgs[0];
+                MatrixCursor mc = new MatrixCursor(
+                        new String[]{"_id", "suggest_intent_data_id", "suggest_text_1",
+                                "suggest_text_2"});
+                if (TextUtils.isEmpty(query)) {
+                    return mc;
                 }
+                SimilarWordGenerator generator = new SimilarWordGenerator();
+                List<String> stringList = generator.generate(query);
+                String similarWordQuery = QueryBuilderUtil.buildWhereClauseWithIn("word",
+                        stringList.size());
+                String[] likeArgs = new String[]{query + "%"};
+                String[] args = ArrayUtils.concatenate(likeArgs, stringList.toArray(new String[0]));
+
                 Cursor cursor = db.query(table, new String[]{"_id", "word", "meaning"},
-                        "word LIKE ?", new String[]{selectionArgs[0] +
-                                "%"},
-                        null, null,
-                        sortOrder, limit);
-                MatrixCursor mc = new MatrixCursor(new String[]{"_id", "suggest_intent_data_id", "suggest_text_1", "suggest_text_2"});
+                        "word LIKE ? OR " + similarWordQuery, args, null, null, sortOrder, null);
+
                 try {
+                    List<Suggestion> suggestions = new ArrayList<>();
+                    EditDistanceCalculator calculator = new EditDistanceCalculator();
                     while (cursor.moveToNext()) {
                         String meaningString = cursor.getString(2);
                         if (!TextUtils.isEmpty(meaningString)) {
+                            String id = cursor.getString(0);
+                            String word = cursor.getString(1);
                             String strippedMeaning = meaningString.split("\\|")[1];
-                            mc.addRow(new Object[]{cursor.getString(0), cursor.getString(0), cursor
-                                    .getString(1), strippedMeaning});
+                            int editDistance = calculator.getEditDistance(query, word);
+                            Log.d("ming", word + " " + editDistance);
+                            Suggestion suggestion =
+                                    new Suggestion(id, word, strippedMeaning, editDistance);
+                            suggestions.add(suggestion);
+                        }
+                    }
+                    Collections.sort(suggestions);
+                    for (Suggestion suggestion : suggestions) {
+                        mc.addRow(new Object[]{suggestion.id, suggestion.id, suggestion.word,
+                                suggestion.meaning});
+                        if (mc.getCount() >= 15) {
+                            break;
                         }
                     }
                 } finally {
                     cursor.close();
                 }
                 return mc;
-            case FAVOURITE_WORDS:
+            }
+            case FAVOURITE_WORDS: {
                 return db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
+            }
         }
         throw new IllegalArgumentException("Do not support uri: " + uri);
     }
+
+    static class Suggestion implements Comparable<Suggestion> {
+        String id;
+        String word;
+        String meaning;
+        int editDistance;
+
+        public Suggestion(String id, String word, String meaning, int editDistance) {
+            this.id = id;
+            this.word = word;
+            this.meaning = meaning;
+            this.editDistance = editDistance;
+        }
+
+        @Override
+        public int compareTo(Suggestion another) {
+            return this.editDistance - another.editDistance;
+        }
+
+    }
+
 
     @Override
     public String getType(Uri uri) {
@@ -113,9 +176,11 @@ public class DictionaryContentProvider extends ContentProvider {
         String table = TABLE_NAMES.get(code);
         switch (code) {
             case FAVOURITE:
-                long id = db.insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+                long id = db.insertWithOnConflict(table, null, contentValues,
+                        SQLiteDatabase.CONFLICT_REPLACE);
                 if (id != -1) {
-                    Uri ret = Favourite.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                    Uri ret = Favourite.CONTENT_URI.buildUpon().appendPath(String.valueOf(id))
+                            .build();
                     return ret;
                 }
         }
@@ -138,4 +203,25 @@ public class DictionaryContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
         return 0;
     }
+
+
+    private static class QueryBuilderUtil {
+        public static String buildWhereClauseWithIn(String column, int numberOfParameters) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(column);
+            sb.append(" IN (");
+            boolean firstItem = true;
+            for (int i = 0; i < numberOfParameters; i++) {
+                if (!firstItem) {
+                    sb.append(",");
+                } else {
+                    firstItem = false;
+                }
+                sb.append("?");
+            }
+            sb.append(")");
+            return sb.toString();
+        }
+    }
+
 }

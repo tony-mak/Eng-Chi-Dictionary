@@ -120,6 +120,5 @@
     <orderEntry type="library" exported="" name="answers-1.2.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.0" level="project" />
     <orderEntry type="module" module-name="sqlite-assest-helper" exported="" />
-    <orderEntry type="library" exported="" name="org.apache.http.legacy-android-23" level="project" />
   </component>
 </module>
