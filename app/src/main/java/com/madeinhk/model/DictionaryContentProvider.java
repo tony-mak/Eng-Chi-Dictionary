@@ -9,7 +9,6 @@ import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.madeinhk.utils.ArrayUtils;
@@ -89,7 +88,6 @@ public class DictionaryContentProvider extends ContentProvider {
             }
             case WORD_SUGGESTION: {
                 // Ignore the limit parameter and hardcode to be five.
-                String limit = "15";
                 String query = selectionArgs[0];
                 MatrixCursor mc = new MatrixCursor(
                         new String[]{"_id", "suggest_intent_data_id", "suggest_text_1",
@@ -104,8 +102,9 @@ public class DictionaryContentProvider extends ContentProvider {
                 String[] likeArgs = new String[]{query + "%"};
                 String[] args = ArrayUtils.concatenate(likeArgs, stringList.toArray(new String[0]));
 
+                final String limit = "20";
                 Cursor cursor = db.query(table, new String[]{"_id", "word", "meaning"},
-                        "word LIKE ? OR " + similarWordQuery, args, null, null, sortOrder, null);
+                        "word LIKE ? OR " + similarWordQuery, args, null, null, sortOrder, limit);
 
                 try {
                     List<Suggestion> suggestions = new ArrayList<>();
@@ -117,7 +116,6 @@ public class DictionaryContentProvider extends ContentProvider {
                             String word = cursor.getString(1);
                             String strippedMeaning = meaningString.split("\\|")[1];
                             int editDistance = calculator.getEditDistance(query, word);
-                            Log.d("ming", word + " " + editDistance);
                             Suggestion suggestion =
                                     new Suggestion(id, word, strippedMeaning, editDistance);
                             suggestions.add(suggestion);
@@ -127,7 +125,7 @@ public class DictionaryContentProvider extends ContentProvider {
                     for (Suggestion suggestion : suggestions) {
                         mc.addRow(new Object[]{suggestion.id, suggestion.id, suggestion.word,
                                 suggestion.meaning});
-                        if (mc.getCount() >= 15) {
+                        if (mc.getCount() >= 10) {
                             break;
                         }
                     }

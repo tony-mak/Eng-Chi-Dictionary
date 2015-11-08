@@ -2,9 +2,16 @@ package com.madeinhk.utils;
 
 public class EditDistanceCalculator {
 
+    /**
+     * @param wordA keyword
+     * @param wordB word suggestion
+     */
     public int getEditDistance(String wordA, String wordB) {
         if (wordA.charAt(0) != wordB.charAt(0)) {
             return Integer.MAX_VALUE;
+        }
+        if (wordB.startsWith(wordA)) {
+            return 0;
         }
         int lengthA = wordA.length();
         int lengthB = wordB.length();
