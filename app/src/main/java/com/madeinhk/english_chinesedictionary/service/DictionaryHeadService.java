@@ -79,7 +79,8 @@ public class DictionaryHeadService extends Service {
                 private float initialTouchX;
                 private float initialTouchY;
                 private boolean mAlwaysInTapRegion = true;
-                final ViewConfiguration configuration = ViewConfiguration.get(DictionaryHeadService.this);
+                final ViewConfiguration configuration =
+                        ViewConfiguration.get(DictionaryHeadService.this);
                 final int touchSlop = configuration.getScaledTouchSlop();
                 private int mTouchSlopSquare = touchSlop * touchSlop;
 
@@ -96,7 +97,8 @@ public class DictionaryHeadService extends Service {
                             return true;
                         case MotionEvent.ACTION_UP:
                             if (mAlwaysInTapRegion) {
-                                Intent intent = DictionaryActivity.getIntent(DictionaryHeadService.this, mWord.mWord);
+                                Intent intent = DictionaryActivity
+                                        .getIntent(DictionaryHeadService.this, mWord.mWord);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 mHandler.removeCallbacksAndMessages(null);
@@ -125,7 +127,7 @@ public class DictionaryHeadService extends Service {
         if (mWord.mDifficulty > 0) {
             sb.append(this.getString(R.string.word_frequency)).append(" ");
             int commonness = 5 - mWord.mDifficulty;
-            for (int i = 0; i <5; i++) {
+            for (int i = 0; i < 5; i++) {
                 if (i <= commonness) {
                     sb.append('★');
                 } else {
@@ -179,11 +181,10 @@ public class DictionaryHeadService extends Service {
         }
     }
 
-
-    public static Intent createIntent(Context context, Word word) {
+    public static void show(Context context, Word word) {
         Intent intent = new Intent(context, DictionaryHeadService.class);
         intent.putExtra(KEY_WORD, word);
-        return intent;
+        context.startService(intent);
     }
 
 }
