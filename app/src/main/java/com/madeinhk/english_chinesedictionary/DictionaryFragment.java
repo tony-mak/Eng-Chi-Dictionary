@@ -343,12 +343,14 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             }
             mDetailTextView.setText(builder);
             mPronounceButton.setVisibility(View.VISIBLE);
+            mPhoneticTextView.setVisibility(View.VISIBLE);
             AppPreference.saveLastWord(mContext, word.mWord);
         } else {
             mWordTextView.setText("No such word :(");
             mCommonnessBar.setVisibility(View.GONE);
             mDetailTextView.setText("");
             mPronounceButton.setVisibility(View.GONE);
+            mPhoneticTextView.setVisibility(View.GONE);
         }
     }
 
