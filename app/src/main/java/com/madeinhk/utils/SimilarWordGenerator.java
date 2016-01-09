@@ -1,8 +1,7 @@
 package com.madeinhk.utils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import com.madeinhk.utils.arrayset.ArraySet;
+
 import java.util.Set;
 
 /**
@@ -11,71 +10,64 @@ import java.util.Set;
 public class SimilarWordGenerator {
     private static final char[] ALPHABETS = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
-    public List<String> generate(String source) {
-        List<String> similarStrings = new ArrayList<>();
-        similarStrings.addAll(generateByDeleteAt(source));
-        similarStrings.addAll(generateByInsertAt(source));
-        similarStrings.addAll(generateByTransposition(source));
-        similarStrings.addAll(genereateBySubstitution(source));
-        return similarStrings;
+    public Set<String> generate(String source) {
+        Set<String> generatedStrings = new ArraySet<>();
+        generateByDeleteAt(source, generatedStrings);
+        generateByInsertAt(source, generatedStrings);
+        generateByTransposition(source, generatedStrings);
+        genereateBySubstitution(source, generatedStrings);
+        return generatedStrings;
     }
 
-    private Set<String> generateByDeleteAt(String source) {
-        Set<String> genereatedStrings = new HashSet<>();
+    private void generateByDeleteAt(String source, Set<String> generatedStrings) {
         final int length = source.length();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            String generatedString = new StringBuilder(source).deleteCharAt(i).toString();
-            genereatedStrings.add(generatedString);
+            stringBuilder.setLength(0);
+            stringBuilder.append(source);
+            String generatedString = stringBuilder.deleteCharAt(i).toString();
+            generatedStrings.add(generatedString);
         }
-        return genereatedStrings;
     }
 
-    private Set<String> generateByInsertAt(String source) {
-        Set<String> genereatedStrings = new HashSet<>();
+    private void generateByInsertAt(String source, Set<String> generatedStrings) {
         final int length = source.length();
-        for (int i = 0; i < length; i++) {
-            for (char alphabet : ALPHABETS) {
-                String generatedString = new StringBuilder(source).insert(i, alphabet).toString();
-                genereatedStrings.add(generatedString);
-            }
-        }
-        return genereatedStrings;
-    }
-
-    private Set<String> genereateBySubstitution(String source) {
-        Set<String> genereatedStrings = new HashSet<>();
-        final int length = source.length();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             for (char alphabet : ALPHABETS) {
-                StringBuilder sb = new StringBuilder(source);
-                sb.setCharAt(i, alphabet);
-                genereatedStrings.add(sb.toString());
+                stringBuilder.setLength(0);
+                stringBuilder.append(source);
+                String generatedString = stringBuilder.insert(i, alphabet).toString();
+                generatedStrings.add(generatedString);
             }
         }
-        return genereatedStrings;
     }
 
-    private Set<String> generateByTransposition(String source) {
-        Set<String> genereatedStrings = new HashSet<>();
+    private void genereateBySubstitution(String source, Set<String> generatedStrings) {
         final int length = source.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            for (char alphabet : ALPHABETS) {
+                stringBuilder.setLength(0);
+                stringBuilder.append(source);
+                stringBuilder.setCharAt(i, alphabet);
+                generatedStrings.add(stringBuilder.toString());
+            }
+        }
+    }
+
+    private void generateByTransposition(String source, Set<String> generatedStrings) {
+        final int length = source.length();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             for (int j = i + 1; j < length; j++) {
-                StringBuilder sb = new StringBuilder(source);
-                char a = sb.charAt(i);
-                sb.setCharAt(i, sb.charAt(j));
-                sb.setCharAt(j, a);
-                genereatedStrings.add(sb.toString());
+                stringBuilder.setLength(0);
+                stringBuilder.append(source);
+                char a = stringBuilder.charAt(i);
+                stringBuilder.setCharAt(i, stringBuilder.charAt(j));
+                stringBuilder.setCharAt(j, a);
+                generatedStrings.add(stringBuilder.toString());
             }
         }
-        return genereatedStrings;
     }
-
-    public static void main(String[] args) {
-        SimilarWordGenerator generator = new SimilarWordGenerator();
-        List<String> list = generator.generate("morroco");
-        for (String str : list) {
-            System.out.println(str);
-        }
-    }
-
 }

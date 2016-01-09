@@ -18,6 +18,7 @@ import com.madeinhk.utils.SimilarWordGenerator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tonymak on 10/9/14.
@@ -96,7 +97,7 @@ public class DictionaryContentProvider extends ContentProvider {
                     return mc;
                 }
                 SimilarWordGenerator generator = new SimilarWordGenerator();
-                List<String> stringList = generator.generate(query);
+                Set<String> stringList = generator.generate(query);
                 String similarWordQuery = QueryBuilderUtil.buildWhereClauseWithIn("word",
                         stringList.size());
                 String[] likeArgs = new String[]{query + "%"};
