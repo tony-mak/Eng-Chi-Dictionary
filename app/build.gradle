@@ -16,6 +16,7 @@ repositories {
 
 
 android {
+    sourceSets.main.jni.srcDirs = []
     signingConfigs {
         release {
             keyAlias 'madeinhk'
