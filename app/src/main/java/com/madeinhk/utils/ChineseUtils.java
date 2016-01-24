@@ -2,6 +2,7 @@ package com.madeinhk.utils;
 
 import android.os.SystemClock;
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Locale;
@@ -26,6 +27,9 @@ public class ChineseUtils {
     }
 
     public static String convertChineseIfNeeded(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return text;
+        }
         if (needToConvert()) {
             return tradToSimp(text);
         }

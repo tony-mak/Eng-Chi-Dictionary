@@ -32,7 +32,6 @@ import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
-import com.madeinhk.utils.ChineseUtils;
 import com.madeinhk.view.LevelIndicator;
 
 import java.util.List;
@@ -296,6 +295,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
 
     final static int INDENTATION_MEANING_LEFT = 50;
     final static int INDENTATION_EXAMPLE_LEFT = 130;
+
     private void buildHtmlFromDictionary(Word word) {
         mWord = word;
         updateFavFab(word);
@@ -322,13 +322,11 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                         builder.append("\n");
                     }
                     firstEntry = false;
-                    appendStyled(builder, ChineseUtils.convertChineseIfNeeded(
-                            typeEntry.getTypeDescription()) + "\n",
+                    appendStyled(builder, typeEntry.getTypeDescription() + "\n",
                             new ForegroundColorSpan(mAccentColor));
                     prevType = typeEntry.mType;
                 }
-                appendStyled(builder, "• " +  ChineseUtils.convertChineseIfNeeded(typeEntry
-                        .mMeaning) + "\n", new LeadingMarginSpan
+                appendStyled(builder, "• " + typeEntry.mMeaning + "\n", new LeadingMarginSpan
                         .Standard(INDENTATION_MEANING_LEFT, INDENTATION_EXAMPLE_LEFT));
 
                 if (!TextUtils.isEmpty(typeEntry.mEngExample)) {
@@ -337,8 +335,8 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
                     boldKeyWord(builder, typeEntry.mEngExample + "\n", word.mWord);
                 }
                 if (!TextUtils.isEmpty(typeEntry.mChiExample)) {
-                    appendStyled(builder, ChineseUtils.convertChineseIfNeeded(typeEntry.mChiExample)
-                            + "\n", new LeadingMarginSpan.Standard(INDENTATION_EXAMPLE_LEFT));
+                    appendStyled(builder, typeEntry.mChiExample + "\n",
+                            new LeadingMarginSpan.Standard(INDENTATION_EXAMPLE_LEFT));
                 }
             }
             mDetailTextView.setText(builder);
@@ -358,6 +356,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
+import com.madeinhk.utils.ChineseUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,8 +32,8 @@ public class Word implements Parcelable {
         String vocab = lookupResult.getWord();
         Crashlytics.log("fromLookupResult: " + vocab);
         String mPhoneticString = lookupResult.getPhoneticString();
-        String meaningString = lookupResult.getMeaning();
-        String exampleString = lookupResult.getExample();
+        String meaningString = ChineseUtils.convertChineseIfNeeded(lookupResult.getMeaning());
+        String exampleString = ChineseUtils.convertChineseIfNeeded(lookupResult.getExample());
         int difficulty = lookupResult.getmDifficulty();
         List<TypeEntry> typeEntries = TypeEntry.parse(meaningString, exampleString);
         return new Word(vocab, mPhoneticString, typeEntries, difficulty);
@@ -70,6 +71,7 @@ public class Word implements Parcelable {
     };
 
     private static final int MAX_LENGTH = 20;
+
     public String buildMeaningSummary() {
         StringBuilder sb = new StringBuilder();
         boolean isFirstItem = true;
@@ -85,7 +87,7 @@ public class Word implements Parcelable {
                 break;
             }
         }
-        return sb.toString();
+        return ChineseUtils.convertChineseIfNeeded(sb.toString());
     }
 
 
@@ -114,552 +116,825 @@ public class Word implements Parcelable {
         }
 
         public String getTypeDescription() {
+            String description;
             switch (mType) {
                 case 0:
-                    return "abbr. 縮寫";
+                    description = "abbr. 縮寫";
+                    break;
                 case 1:
-                    return "a. 形容詞";
+                    description = "a. 形容詞";
+                    break;
                 case 2:
-                    return "int. 感嘆詞";
+                    description = "int. 感嘆詞";
+                    break;
                 case 3:
-                    return "n. 名詞";
+                    description = "n. 名詞";
+                    break;
                 case 4:
-                    return "pr n";
+                    description = "pr n";
+                    break;
                 case 5:
-                    return "ad. 副詞";
+                    description = "ad. 副詞";
+                    break;
                 case 6:
-                    return "vt";
+                    description = "vt";
+                    break;
                 case 7:
-                    return "vi";
+                    description = "vi";
+                    break;
                 case 8:
-                    return "npl";
+                    description = "npl";
+                    break;
                 case 9:
-                    return "";
+                    description = "";
+                    break;
                 case 10:
-                    return "abbr";
+                    description = "abbr";
+                    break;
                 case 11:
-                    return "pt";
+                    description = "pt";
+                    break;
                 case 12:
-                    return "vt. 及物動詞";
+                    description = "vt. 及物動詞";
+                    break;
                 case 13:
-                    return "excl";
+                    description = "excl";
+                    break;
                 case 14:
-                    return "prep. 介係詞";
+                    description = "prep. 介係詞";
+                    break;
                 case 15:
-                    return "prep phr";
+                    description = "prep phr";
+                    break;
                 case 16:
-                    return "conj phr";
+                    description = "conj phr";
+                    break;
                 case 17:
-                    return "vi. 不及物動詞";
+                    description = "vi. 不及物動詞";
+                    break;
                 case 18:
-                    return "n.[theS]";
+                    description = "n.[theS]";
+                    break;
                 case 19:
-                    return "pref.";
+                    description = "pref.";
+                    break;
                 case 20:
-                    return "n.【農】";
+                    description = "n.【農】";
+                    break;
                 case 21:
-                    return "pt pp";
+                    description = "pt pp";
+                    break;
                 case 22:
-                    return "vi. & vt.";
+                    description = "vi. & vt.";
+                    break;
                 case 23:
-                    return "n. [C] 可數名詞";
+                    description = "n. [C] 可數名詞";
+                    break;
                 case 24:
-                    return "pron. 代名詞";
+                    description = "pron. 代名詞";
+                    break;
                 case 25:
-                    return "v refl";
+                    description = "v refl";
+                    break;
                 case 26:
-                    return "comb. form";
+                    description = "comb. form";
+                    break;
                 case 27:
-                    return "modif";
+                    description = "modif";
+                    break;
                 case 28:
-                    return "suf. 字尾";
+                    description = "suf. 字尾";
+                    break;
                 case 29:
-                    return "adv phr";
+                    description = "adv phr";
+                    break;
                 case 30:
-                    return "advs";
+                    description = "advs";
+                    break;
                 case 31:
-                    return "n.[U]【律】";
+                    description = "n.[U]【律】";
+                    break;
                 case 32:
-                    return "ns";
+                    description = "ns";
+                    break;
                 case 33:
-                    return "adjs";
+                    description = "adjs";
+                    break;
                 case 34:
-                    return "n.【英】【俚】";
+                    description = "n.【英】【俚】";
+                    break;
                 case 35:
-                    return "n. & a.";
+                    description = "n. & a.";
+                    break;
                 case 36:
-                    return "suf.(構成形容詞或名詞)";
+                    description = "suf.(構成形容詞或名詞)";
+                    break;
                 case 37:
-                    return "v.";
+                    description = "v.";
+                    break;
                 case 38:
-                    return "comb. form(構成名詞)";
+                    description = "comb. form(構成名詞)";
+                    break;
                 case 39:
-                    return "adj n";
+                    description = "adj n";
+                    break;
                 case 40:
-                    return "pp";
+                    description = "pp";
+                    break;
                 case 41:
-                    return "n.【化】";
+                    description = "n.【化】";
+                    break;
                 case 42:
-                    return "ph. 片語";
+                    description = "ph. 片語";
+                    break;
                 case 43:
-                    return "abbrs";
+                    description = "abbrs";
+                    break;
                 case 44:
-                    return "det";
+                    description = "det";
+                    break;
                 case 45:
-                    return "combining form";
+                    description = "combining form";
+                    break;
                 case 46:
-                    return "a.[F]";
+                    description = "a.[F]";
+                    break;
                 case 47:
-                    return "a.【植】";
+                    description = "a.【植】";
+                    break;
                 case 48:
-                    return "adj adv";
+                    description = "adj adv";
+                    break;
                 case 49:
-                    return "a.[Z]";
+                    description = "a.[Z]";
+                    break;
                 case 50:
-                    return "suf.(構成名詞)";
+                    description = "suf.(構成名詞)";
+                    break;
                 case 51:
-                    return "excls";
+                    description = "excls";
+                    break;
                 case 52:
-                    return "n.(複數)";
+                    description = "n.(複數)";
+                    break;
                 case 53:
-                    return "n.【建】";
+                    description = "n.【建】";
+                    break;
                 case 54:
-                    return "adj phr";
+                    description = "adj phr";
+                    break;
                 case 55:
-                    return "suf.(名詞字尾)";
+                    description = "suf.(名詞字尾)";
+                    break;
                 case 56:
-                    return "a.【口】";
+                    description = "a.【口】";
+                    break;
                 case 57:
-                    return "n.[P1]";
+                    description = "n.[P1]";
+                    break;
                 case 58:
-                    return "modal aux";
+                    description = "modal aux";
+                    break;
                 case 59:
-                    return "a.【主蘇格蘭】";
+                    description = "a.【主蘇格蘭】";
+                    break;
                 case 60:
-                    return "n.【法】";
+                    description = "n.【法】";
+                    break;
                 case 61:
-                    return "n.[U]";
+                    description = "n.[U]";
+                    break;
                 case 62:
-                    return "a.【古】";
+                    description = "a.【古】";
+                    break;
                 case 63:
-                    return "suf.(形容詞字尾)";
+                    description = "suf.(形容詞字尾)";
+                    break;
                 case 64:
-                    return "ad.【古】";
+                    description = "ad.【古】";
+                    break;
                 case 65:
-                    return "n.【古】";
+                    description = "n.【古】";
+                    break;
                 case 66:
-                    return "vt vi";
+                    description = "vt vi";
+                    break;
                 case 67:
-                    return "n.【植】";
+                    description = "n.【植】";
+                    break;
                 case 68:
-                    return "a. & ad.";
+                    description = "a. & ad.";
+                    break;
                 case 69:
-                    return "suf.(構成形容詞)";
+                    description = "suf.(構成形容詞)";
+                    break;
                 case 70:
-                    return "suf.(形容詞語尾)";
+                    description = "suf.(形容詞語尾)";
+                    break;
                 case 71:
-                    return "suf.(形成人物之意的名詞或形容詞詞尾)";
+                    description = "suf.(形成人物之意的名詞或形容詞詞尾)";
+                    break;
                 case 72:
-                    return "vi vt";
+                    description = "vi vt";
+                    break;
                 case 73:
-                    return "suf.(附在動詞之後形成名詞)";
+                    description = "suf.(附在動詞之後形成名詞)";
+                    break;
                 case 74:
-                    return "n vt";
+                    description = "n vt";
+                    break;
                 case 75:
-                    return "comb. form(構成形容詞)";
+                    description = "comb. form(構成形容詞)";
+                    break;
                 case 76:
-                    return "n.【解】";
+                    description = "n.【解】";
+                    break;
                 case 77:
-                    return "n.【動】";
+                    description = "n.【動】";
+                    break;
                 case 78:
-                    return "a.【動】";
+                    description = "a.【動】";
+                    break;
                 case 79:
-                    return "n.【美】";
+                    description = "n.【美】";
+                    break;
                 case 80:
-                    return "n.【主英】";
+                    description = "n.【主英】";
+                    break;
                 case 81:
-                    return "n.【南非】";
+                    description = "n.【南非】";
+                    break;
                 case 82:
-                    return "n.(複數，用作單數)";
+                    description = "n.(複數，用作單數)";
+                    break;
                 case 83:
-                    return "conj";
+                    description = "conj";
+                    break;
                 case 84:
-                    return "n.【俚】";
+                    description = "n.【俚】";
+                    break;
                 case 85:
-                    return "pres p";
+                    description = "pres p";
+                    break;
                 case 86:
-                    return "n.【空】";
+                    description = "n.【空】";
+                    break;
                 case 87:
-                    return "a.[B]";
+                    description = "a.[B]";
+                    break;
                 case 88:
-                    return "phr";
+                    description = "phr";
+                    break;
                 case 89:
-                    return "a.【美】【俚】";
+                    description = "a.【美】【俚】";
+                    break;
                 case 90:
-                    return "n.【俚】【粗】";
+                    description = "n.【俚】【粗】";
+                    break;
                 case 91:
-                    return "n. & vi.";
+                    description = "n. & vi.";
+                    break;
                 case 92:
-                    return "a.【俚】";
+                    description = "a.【俚】";
+                    break;
                 case 93:
-                    return "vi.【古】";
+                    description = "vi.【古】";
+                    break;
                 case 94:
-                    return "particle";
+                    description = "particle";
+                    break;
                 case 95:
-                    return "vt.【法】";
+                    description = "vt.【法】";
+                    break;
                 case 96:
-                    return "n.(用作單數或複數)";
+                    description = "n.(用作單數或複數)";
+                    break;
                 case 97:
-                    return "adv and prep phr";
+                    description = "adv and prep phr";
+                    break;
                 case 98:
-                    return "pr npl";
+                    description = "pr npl";
+                    break;
                 case 99:
-                    return "a.【法】";
+                    description = "a.【法】";
+                    break;
                 case 100:
-                    return "vt.【主英】";
+                    description = "vt.【主英】";
+                    break;
                 case 101:
-                    return "n.【語】";
+                    description = "n.【語】";
+                    break;
                 case 102:
-                    return "n.【蘇格蘭】【英】【方】";
+                    description = "n.【蘇格蘭】【英】【方】";
+                    break;
                 case 103:
-                    return "conj. 連接詞";
+                    description = "conj. 連接詞";
+                    break;
                 case 104:
-                    return "n.(常用複數)";
+                    description = "n.(常用複數)";
+                    break;
                 case 105:
-                    return "n.【葡】";
+                    description = "n.【葡】";
+                    break;
                 case 106:
-                    return "n.【醫】";
+                    description = "n.【醫】";
+                    break;
                 case 107:
-                    return "a.[Z][B]";
+                    description = "a.[Z][B]";
+                    break;
                 case 108:
-                    return "n.【西】";
+                    description = "n.【西】";
+                    break;
                 case 109:
-                    return "conj phr used after negative";
+                    description = "conj phr used after negative";
+                    break;
                 case 110:
-                    return "vt.【古】";
+                    description = "vt.【古】";
+                    break;
                 case 111:
-                    return "ad.【書】[(+as)]";
+                    description = "ad.【書】[(+as)]";
+                    break;
                 case 112:
-                    return "vi.【主英】";
+                    description = "vi.【主英】";
+                    break;
                 case 113:
-                    return "a.【詩】";
+                    description = "a.【詩】";
+                    break;
                 case 114:
-                    return "n.【義】";
+                    description = "n.【義】";
+                    break;
                 case 115:
-                    return "vi.【方】";
+                    description = "vi.【方】";
+                    break;
                 case 116:
-                    return "None";
+                    description = "None";
+                    break;
                 case 117:
-                    return "n.【物】";
+                    description = "n.【物】";
+                    break;
                 case 118:
-                    return "a.【宗】";
+                    description = "a.【宗】";
+                    break;
                 case 119:
-                    return "v impers";
+                    description = "v impers";
+                    break;
                 case 120:
-                    return "n.【英】【口】";
+                    description = "n.【英】【口】";
+                    break;
                 case 121:
-                    return "n.【蘇格蘭】";
+                    description = "n.【蘇格蘭】";
+                    break;
                 case 122:
-                    return "vt.【化】";
+                    description = "vt.【化】";
+                    break;
                 case 123:
-                    return "a. & int.";
+                    description = "a. & int.";
+                    break;
                 case 124:
-                    return "vt.【英】【方】";
+                    description = "vt.【英】【方】";
+                    break;
                 case 125:
-                    return "vi.【英】【方】";
+                    description = "vi.【英】【方】";
+                    break;
                 case 126:
-                    return "n.【英】【方】";
+                    description = "n.【英】【方】";
+                    break;
                 case 127:
-                    return "ad. & prep. & conj.";
+                    description = "ad. & prep. & conj.";
+                    break;
                 case 128:
-                    return "vt.【英】【俚】";
+                    description = "vt.【英】【俚】";
+                    break;
                 case 129:
-                    return "n.【口】";
+                    description = "n.【口】";
+                    break;
                 case 130:
-                    return "vt.【口】";
+                    description = "vt.【口】";
+                    break;
                 case 131:
-                    return "n.[U]【美】";
+                    description = "n.[U]【美】";
+                    break;
                 case 132:
-                    return "ad.【蘇格蘭】";
+                    description = "ad.【蘇格蘭】";
+                    break;
                 case 133:
-                    return "n.【德】";
+                    description = "n.【德】";
+                    break;
                 case 134:
-                    return "n.【生】";
+                    description = "n.【生】";
+                    break;
                 case 135:
-                    return "n adj";
+                    description = "n adj";
+                    break;
                 case 136:
-                    return "n.【電】";
+                    description = "n.【電】";
+                    break;
                 case 137:
-                    return "n.【律】";
+                    description = "n.【律】";
+                    break;
                 case 138:
-                    return "n.【罕】";
+                    description = "n.【罕】";
+                    break;
                 case 139:
-                    return "a.【醫】";
+                    description = "a.【醫】";
+                    break;
                 case 140:
-                    return "n.[C]【美】";
+                    description = "n.[C]【美】";
+                    break;
                 case 141:
-                    return "n.[C][(+on)]";
+                    description = "n.[C][(+on)]";
+                    break;
                 case 142:
-                    return "n.【蘇格蘭】【廢】";
+                    description = "n.【蘇格蘭】【廢】";
+                    break;
                 case 143:
-                    return "n.[C]【貶】";
+                    description = "n.[C]【貶】";
+                    break;
                 case 144:
-                    return "a. & ad.(常作表語)";
+                    description = "a. & ad.(常作表語)";
+                    break;
                 case 145:
-                    return "vt.【蘇格蘭】";
+                    description = "vt.【蘇格蘭】";
+                    break;
                 case 146:
-                    return "adv prep";
+                    description = "adv prep";
+                    break;
                 case 147:
-                    return "vt vi n";
+                    description = "vt vi n";
+                    break;
                 case 148:
-                    return "a.【地】";
+                    description = "a.【地】";
+                    break;
                 case 149:
-                    return "n excl";
+                    description = "n excl";
+                    break;
                 case 150:
-                    return "aux. 助動詞";
+                    description = "aux. 助動詞";
+                    break;
                 case 151:
-                    return "int.【美】【俚】";
+                    description = "int.【美】【俚】";
+                    break;
                 case 152:
-                    return "n.【澳】";
+                    description = "n.【澳】";
+                    break;
                 case 153:
-                    return "a.【澳】";
+                    description = "a.【澳】";
+                    break;
                 case 154:
-                    return "a.【罕】";
+                    description = "a.【罕】";
+                    break;
                 case 155:
-                    return "ad.【書】";
+                    description = "ad.【書】";
+                    break;
                 case 156:
-                    return "a.【解】";
+                    description = "a.【解】";
+                    break;
                 case 157:
-                    return "n.【方】";
+                    description = "n.【方】";
+                    break;
                 case 158:
-                    return "n. & vt.";
+                    description = "n. & vt.";
+                    break;
                 case 159:
-                    return "n.【拉】";
+                    description = "n.【拉】";
+                    break;
                 case 160:
-                    return "n.v.";
+                    description = "n.v.";
+                    break;
                 case 161:
-                    return "vt.[H]";
+                    description = "vt.[H]";
+                    break;
                 case 162:
-                    return "n.【商】";
+                    description = "n.【商】";
+                    break;
                 case 163:
-                    return "n.【體】";
+                    description = "n.【體】";
+                    break;
                 case 164:
-                    return "ad.【口】";
+                    description = "ad.【口】";
+                    break;
                 case 165:
-                    return "vt.【方】";
+                    description = "vt.【方】";
+                    break;
                 case 166:
-                    return "n.【俄】";
+                    description = "n.【俄】";
+                    break;
                 case 167:
-                    return "ad.【英】【口】";
+                    description = "ad.【英】【口】";
+                    break;
                 case 168:
-                    return "n.[C]【法】";
+                    description = "n.[C]【法】";
+                    break;
                 case 169:
-                    return "n vi vt";
+                    description = "n vi vt";
+                    break;
                 case 170:
-                    return "a.【義】【音】";
+                    description = "a.【義】【音】";
+                    break;
                 case 171:
-                    return "n.[U]【口】";
+                    description = "n.[U]【口】";
+                    break;
                 case 172:
-                    return "n.【地】";
+                    description = "n.【地】";
+                    break;
                 case 173:
-                    return "n.[U][C]";
+                    description = "n.[U][C]";
+                    break;
                 case 174:
-                    return "n.[U]【文】";
+                    description = "n.[U]【文】";
+                    break;
                 case 175:
-                    return "n.【美】【俚】";
+                    description = "n.【美】【俚】";
+                    break;
                 case 176:
-                    return "vi n";
+                    description = "vi n";
+                    break;
                 case 177:
-                    return "adv and pron phr";
+                    description = "adv and pron phr";
+                    break;
                 case 178:
-                    return "n.[C]【古】";
+                    description = "n.[C]【古】";
+                    break;
                 case 179:
-                    return "n. & vi.【英】【方】";
+                    description = "n. & vi.【英】【方】";
+                    break;
                 case 180:
-                    return "n.[U]【古】";
+                    description = "n.[U]【古】";
+                    break;
                 case 181:
-                    return "n.【英】";
+                    description = "n.【英】";
+                    break;
                 case 182:
-                    return "n.[U][S1]";
+                    description = "n.[U][S1]";
+                    break;
                 case 183:
-                    return "a.【英】【俚】";
+                    description = "a.【英】【俚】";
+                    break;
                 case 184:
-                    return "a.(只作表語)";
+                    description = "a.(只作表語)";
+                    break;
                 case 185:
-                    return "n.【意】";
+                    description = "n.【意】";
+                    break;
                 case 186:
-                    return "vt.【口】【謔】";
+                    description = "vt.【口】【謔】";
+                    break;
                 case 187:
-                    return "n.【魚】";
+                    description = "n.【魚】";
+                    break;
                 case 188:
-                    return "copula";
+                    description = "copula";
+                    break;
                 case 189:
-                    return "n.(用作單)";
+                    description = "n.(用作單)";
+                    break;
                 case 190:
-                    return "n.[C][U]";
+                    description = "n.[C][U]";
+                    break;
                 case 191:
-                    return "n.[C]【英】【史】";
+                    description = "n.[C]【英】【史】";
+                    break;
                 case 192:
-                    return "v.aux.【古】";
+                    description = "v.aux.【古】";
+                    break;
                 case 193:
-                    return "n.【美】【口】";
+                    description = "n.【美】【口】";
+                    break;
                 case 194:
-                    return "n.【俚】【舊】";
+                    description = "n.【俚】【舊】";
+                    break;
                 case 195:
-                    return "a. & ad.【法】";
+                    description = "a. & ad.【法】";
+                    break;
                 case 196:
-                    return "in adv phrs";
+                    description = "in adv phrs";
+                    break;
                 case 197:
-                    return "a.【方】";
+                    description = "a.【方】";
+                    break;
                 case 198:
-                    return "n. & int.";
+                    description = "n. & int.";
+                    break;
                 case 199:
-                    return "ad. & prep";
+                    description = "ad. & prep";
+                    break;
                 case 200:
-                    return "n.[the S]【古】【文】";
+                    description = "n.[the S]【古】【文】";
+                    break;
                 case 201:
-                    return "prep. & conj.";
+                    description = "prep. & conj.";
+                    break;
                 case 202:
-                    return "n.【生化】";
+                    description = "n.【生化】";
+                    break;
                 case 203:
-                    return "a.【英】【方】";
+                    description = "a.【英】【方】";
+                    break;
                 case 204:
-                    return "vt.【英】";
+                    description = "vt.【英】";
+                    break;
                 case 205:
-                    return "int.【古】";
+                    description = "int.【古】";
+                    break;
                 case 206:
-                    return "pref.(用在b m p前)";
+                    description = "pref.(用在b m p前)";
+                    break;
                 case 207:
-                    return "n.【印英】";
+                    description = "n.【印英】";
+                    break;
                 case 208:
-                    return "n.【生】【物】【化】";
+                    description = "n.【生】【物】【化】";
+                    break;
                 case 209:
-                    return "a.(用作表語)";
+                    description = "a.(用作表語)";
+                    break;
                 case 210:
-                    return "pt pp";
+                    description = "pt pp";
+                    break;
                 case 211:
-                    return "n.(複數，亦作microelectronics)";
+                    description = "n.(複數，亦作microelectronics)";
+                    break;
                 case 212:
-                    return "n.【心】";
+                    description = "n.【心】";
+                    break;
                 case 213:
-                    return "adv phr pron phr";
+                    description = "adv phr pron phr";
+                    break;
                 case 214:
-                    return "vi.【美】";
+                    description = "vi.【美】";
+                    break;
                 case 215:
-                    return "a.【海】";
+                    description = "a.【海】";
+                    break;
                 case 216:
-                    return "a.【生】";
+                    description = "a.【生】";
+                    break;
                 case 217:
-                    return "excl adj adv vt n";
+                    description = "excl adj adv vt n";
+                    break;
                 case 218:
-                    return "excl adj adv";
+                    description = "excl adj adv";
+                    break;
                 case 219:
-                    return "a.【英方】";
+                    description = "a.【英方】";
+                    break;
                 case 220:
-                    return "pref.(構成形容詞或副詞)";
+                    description = "pref.(構成形容詞或副詞)";
+                    break;
                 case 221:
-                    return "n. & vi. & vt.";
+                    description = "n. & vi. & vt.";
+                    break;
                 case 222:
-                    return "n. & v.";
+                    description = "n. & v.";
+                    break;
                 case 223:
-                    return "n.【冶】";
+                    description = "n.【冶】";
+                    break;
                 case 224:
-                    return "n vi";
+                    description = "n vi";
+                    break;
                 case 225:
-                    return "a.【物】";
+                    description = "a.【物】";
+                    break;
                 case 226:
-                    return "n.【哲】";
+                    description = "n.【哲】";
+                    break;
                 case 227:
-                    return "a.[U]";
+                    description = "a.[U]";
+                    break;
                 case 228:
-                    return "adj n vt vi";
+                    description = "adj n vt vi";
+                    break;
                 case 229:
-                    return "pl";
+                    description = "pl";
+                    break;
                 case 230:
-                    return "n.[J]";
+                    description = "n.[J]";
+                    break;
                 case 231:
-                    return "a.(常作表語)";
+                    description = "a.(常作表語)";
+                    break;
                 case 232:
-                    return "n.[M][G]";
+                    description = "n.[M][G]";
+                    break;
                 case 233:
-                    return "vt.【美】【口】";
+                    description = "vt.【美】【口】";
+                    break;
                 case 234:
-                    return "vi.【口】";
+                    description = "vi.【口】";
+                    break;
                 case 235:
-                    return "a.【美】【口】";
+                    description = "a.【美】【口】";
+                    break;
                 case 236:
-                    return "n.【拉】【書】";
+                    description = "n.【拉】【書】";
+                    break;
                 case 237:
-                    return "n.【棒】";
+                    description = "n.【棒】";
+                    break;
                 case 238:
-                    return "vt.【海】";
+                    description = "vt.【海】";
+                    break;
                 case 239:
-                    return "vt.【主英】[W]";
+                    description = "vt.【主英】[W]";
+                    break;
                 case 240:
-                    return "adj adv particle n";
+                    description = "adj adv particle n";
+                    break;
                 case 241:
-                    return "a.【數】";
+                    description = "a.【數】";
+                    break;
                 case 242:
-                    return "n.【數】";
+                    description = "n.【數】";
+                    break;
                 case 243:
-                    return "n.【美】【加】";
+                    description = "n.【美】【加】";
+                    break;
                 case 244:
-                    return "a.【美】(= 【英】gray-headed)";
+                    description = "a.【美】(= 【英】gray-headed)";
+                    break;
                 case 245:
-                    return "vt n";
+                    description = "vt n";
+                    break;
                 case 246:
-                    return "a.【美】";
+                    description = "a.【美】";
+                    break;
                 case 247:
-                    return "vt.【古】【詩】";
+                    description = "vt.【古】【詩】";
+                    break;
                 case 248:
-                    return "abbr.【電腦】";
+                    description = "abbr.【電腦】";
+                    break;
                 case 249:
-                    return "n.【英】【史】";
+                    description = "n.【英】【史】";
+                    break;
                 case 250:
-                    return "n.[K]";
+                    description = "n.[K]";
+                    break;
                 case 251:
-                    return "a.【主英】";
+                    description = "a.【主英】";
+                    break;
                 case 252:
-                    return "a.【昆】";
+                    description = "a.【昆】";
+                    break;
                 case 253:
-                    return "pref.【化】";
+                    description = "pref.【化】";
+                    break;
                 case 254:
-                    return "n.[M]";
+                    description = "n.[M]";
+                    break;
                 case 255:
-                    return "n.【美】【軍】";
+                    description = "n.【美】【軍】";
+                    break;
                 case 256:
-                    return "vi.【文】(用於否定句、疑問句)";
+                    description = "vi.【文】(用於否定句、疑問句)";
+                    break;
                 case 257:
-                    return "n.[K]【主美】";
+                    description = "n.[K]【主美】";
+                    break;
                 case 258:
-                    return "a.【古】[F]";
+                    description = "a.【古】[F]";
+                    break;
                 case 259:
-                    return "n.[C]【書】";
+                    description = "n.[C]【書】";
+                    break;
                 case 260:
-                    return "prep.【古】【詩】";
+                    description = "prep.【古】【詩】";
+                    break;
                 case 261:
-                    return "n.[theS][M][G]";
+                    description = "n.[theS][M][G]";
+                    break;
                 case 262:
-                    return "n.(somersault之變體)";
+                    description = "n.(somersault之變體)";
+                    break;
                 case 263:
-                    return "n.【音】";
+                    description = "n.【音】";
+                    break;
                 case 264:
-                    return "vt.【美】【俚】";
+                    description = "vt.【美】【俚】";
+                    break;
                 case 265:
-                    return "adv pron";
+                    description = "adv pron";
+                    break;
                 case 266:
-                    return "n.【愛爾蘭】";
+                    description = "n.【愛爾蘭】";
+                    break;
                 case 267:
-                    return "n.【蘇格蘭】(用作單或複)";
+                    description = "n.【蘇格蘭】(用作單或複)";
+                    break;
                 case 268:
-                    return "pron phr";
+                    description = "pron phr";
+                    break;
                 case 269:
-                    return "n.[C]【植】";
+                    description = "n.[C]【植】";
+                    break;
                 case 270:
-                    return "n.(亦作permayouth)";
+                    description = "n.(亦作permayouth)";
+                    break;
                 default:
-                    return "N/A";
+                    description = "N/A";
             }
+            return ChineseUtils.convertChineseIfNeeded(description);
         }
 
         @Override
