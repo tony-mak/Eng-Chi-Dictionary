@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.madeinhk.utils.ArrayUtils;
+import com.madeinhk.utils.ChineseUtils;
 import com.madeinhk.utils.EditDistanceCalculator;
 import com.madeinhk.utils.SimilarWordGenerator;
 
@@ -115,7 +116,8 @@ public class DictionaryContentProvider extends ContentProvider {
                         if (!TextUtils.isEmpty(meaningString)) {
                             String id = cursor.getString(0);
                             String word = cursor.getString(1);
-                            String strippedMeaning = meaningString.split("\\|")[1];
+                            String strippedMeaning = ChineseUtils.convertChineseIfNeeded
+                                    (meaningString.split("\\|")[1]);
                             int editDistance = calculator.getEditDistance(query, word);
                             Suggestion suggestion =
                                     new Suggestion(id, word, strippedMeaning, editDistance);

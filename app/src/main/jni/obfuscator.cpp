@@ -125,11 +125,11 @@ static bool verifyPackageName(JNIEnv* env, jobject context) {
 extern "C" {
 
 JNIEXPORT void JNICALL Java_com_madeinhk_utils_Obfuscator_init(JNIEnv * env, jclass cls, jobject context) {
-  // bool valid = verifyPackageName(env, context);
-  //   if (!valid) {
-  //     exit(-1);
-  // }
-  //   replace_sqlite_syscall();
+  bool valid = verifyPackageName(env, context);
+    if (!valid) {
+      exit(-1);
+  }
+    replace_sqlite_syscall();
 }
 }
 
