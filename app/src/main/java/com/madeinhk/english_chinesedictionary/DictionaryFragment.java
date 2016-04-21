@@ -18,7 +18,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +35,8 @@ import com.madeinhk.view.LevelIndicator;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 
@@ -272,9 +273,12 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     }
 
     private void boldKeyWord(SpannableStringBuilder builder, String str, String keyword) {
-        int index = str.indexOf(keyword);
-        if (index != -1) {
-            int start = builder.length() - str.length() + index;
+        String patternString = "\\b" + keyword + "\\b";
+        Pattern boldKeyWordPattern = Pattern.compile(patternString);
+        Matcher boldKeyWordMatcher = boldKeyWordPattern.matcher(str);
+
+        while (boldKeyWordMatcher.find()) {
+            int start = builder.length() - str.length() + boldKeyWordMatcher.start();
             int end = start + keyword.length();
             builder.setSpan(new android.text.style.StyleSpan
                     (Typeface.BOLD), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
