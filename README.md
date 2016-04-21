@@ -4,3 +4,5 @@ Eng-Chi-Dictionary
 
 Englist to Chinese dictionary Android app. </br>
 This project is released under GNU GPL v2
+
+You could find the review about this app [here](http://www.jianshu.com/p/cd414246bf5e)!
