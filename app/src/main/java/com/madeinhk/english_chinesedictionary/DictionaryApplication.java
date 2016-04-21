@@ -24,7 +24,7 @@ public class DictionaryApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        Obfuscator.init(base);
+//        Obfuscator.init(base);
     }
 
     @Override
