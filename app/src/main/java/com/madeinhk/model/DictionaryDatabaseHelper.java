@@ -7,9 +7,7 @@ package com.madeinhk.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -18,7 +16,7 @@ import java.util.List;
 
 
 public class DictionaryDatabaseHelper extends SQLiteAssetHelper {
-    private static final String DATABASE_NAME = "dict.db";
+    public static final String DATABASE_NAME = "dict.db";
     private static final int DATABASE_VERSION = 3;
     private FavouriteMigrationTool mFavouriteMigrationTool;
     private Context mContext;

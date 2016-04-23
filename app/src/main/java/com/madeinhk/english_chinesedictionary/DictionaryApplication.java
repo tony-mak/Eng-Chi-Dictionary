@@ -9,6 +9,7 @@ import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
+import com.madeinhk.utils.DatabaseMigrationUtil;
 import com.madeinhk.utils.Obfuscator;
 import io.fabric.sdk.android.Fabric;
 
@@ -24,7 +25,7 @@ public class DictionaryApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-//        Obfuscator.init(base);
+        DatabaseMigrationUtil.maybeMigrate(base);
     }
 
     @Override
