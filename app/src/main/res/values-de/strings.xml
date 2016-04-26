@@ -21,5 +21,9 @@
 	<string name="rare_word">Dieses Wort ist nicht üblich.</string>
 	<string name="very_rare_word">Ein seltenes Wort.</string>
 	<string name="word_frequency">Word-Frequenz:</string>
+	<string name="grey">Grau</string>
+	<string name="red">Rot</string>
+	<string name="notice_color">Mitteilung Farbe</string>
+	<string name="pink">Rosa</string>
 
 </resources>

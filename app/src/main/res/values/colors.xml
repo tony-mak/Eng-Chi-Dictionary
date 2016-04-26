@@ -156,4 +156,9 @@
     <color name="colorAccent">#448AFF</color>
     <color name="activated_color">#E8E8E8</color>
 
+    <color name="red_custom_toast">#ffc41411</color>
+    <color name="grey_custom_toast">#eb484545</color>
+    <color name="pink_custom_toast">#e1dc188e</color>
+
+
 </resources>

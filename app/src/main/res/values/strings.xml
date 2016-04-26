@@ -28,4 +28,8 @@
     <string name="rare_word">This word is not common.</string>
     <string name="very_rare_word">A rare word.</string>
     <string name="word_frequency">Word frequency:</string>
+    <string name="notice_color">Set Notice Color</string>
+    <string name="grey">grey</string>
+    <string name="red">red</string>
+    <string name="pink">pink</string>
 </resources>

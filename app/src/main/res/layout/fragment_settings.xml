@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/material_grey_100"
+    tools:context="com.madeinhk.app.SettingsFragment">
+
+    <RadioGroup
+        android:id="@+id/colors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/colors"
+            android:layout_toRightOf="@+id/colors"
+            android:text="@string/notice_color"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal" />
+
+        <RadioButton
+            android:id="@+id/red"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/colors"
+            android:text="@string/red"
+            android:background="@drawable/red_custom_toast" />
+
+        <RadioButton
+            android:id="@+id/pink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pink"
+            android:layout_below="@+id/colors"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/pink_custom_toast" />
+
+        <RadioButton
+            android:id="@+id/grey"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignLeft="@+id/red"
+            android:layout_alignStart="@+id/red"
+            android:layout_below="@+id/red"
+            android:text="@string/grey"
+            android:layout_weight="1"
+            android:background="@drawable/grey_custom_toast" />
+
+    </RadioGroup>
+
+
+</RelativeLayout>

@@ -3,10 +3,13 @@ package com.madeinhk.english_chinesedictionary.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,7 +17,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -55,6 +57,22 @@ public class DictionaryHeadService extends Service {
             LayoutInflater inflate = (LayoutInflater)
                     this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mDictionaryHead = inflate.inflate(R.layout.dictionary_head, null);
+
+            //reset toast background
+            Context mContext = getBaseContext();
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String color = settings.getString("color", "notFound");
+
+            if("grey".equals(color)){
+                Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.grey_custom_toast);
+                mDictionaryHead.setBackground(drawable);
+            }
+            if("pink".equals(color)){
+                Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.pink_custom_toast);
+                mDictionaryHead.setBackground(drawable);
+            }
+
+
             mTextView = (TextView) mDictionaryHead.findViewById(R.id.message);
             mFavButton = (ToggleButton) mDictionaryHead.findViewById(R.id.fav_button);
 

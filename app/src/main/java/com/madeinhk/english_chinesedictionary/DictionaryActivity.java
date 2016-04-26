@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.madeinhk.app.AboutFragment;
+import com.madeinhk.app.SettingsFragment;
 import com.madeinhk.english_chinesedictionary.service.ClipboardService;
 import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
@@ -45,7 +46,8 @@ public class DictionaryActivity extends AppCompatActivity {
         int EMPTY = -1;
         int DICTIONARY = 0;
         int FAVOURITE = 1;
-        int ABOUT = 2;
+        int SETTINGS = 2;
+        int ABOUT = 3;
     }
 
     private static final String TAG = "DictionaryActivity";
@@ -165,6 +167,8 @@ public class DictionaryActivity extends AppCompatActivity {
                 return R.id.nav_favourite;
             case PagePos.ABOUT:
                 return R.id.nav_about;
+            case PagePos.SETTINGS:
+                return R.id.nav_settings;
         }
         throw new IllegalArgumentException("Invalid Pos");
     }
@@ -221,6 +225,10 @@ public class DictionaryActivity extends AppCompatActivity {
                             case R.id.nav_about:
                                 fragment = new AboutFragment();
                                 position = PagePos.ABOUT;
+                                break;
+                            case R.id.nav_settings:
+                                fragment = new SettingsFragment();
+                                position = PagePos.SETTINGS;
                                 break;
                         }
                         if (mCurrentPage != position) {

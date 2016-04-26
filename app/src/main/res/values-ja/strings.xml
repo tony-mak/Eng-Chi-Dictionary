@@ -21,5 +21,9 @@
 	<string name="rare_word">この言葉は一般的ではありません。</string>
 	<string name="very_rare_word">まれな単語。</string>
 	<string name="word_frequency">単語の出現頻度:</string>
+	<string name="notice_color">通知の色</string>
+	<string name="grey">灰色</string>
+	<string name="red">赤い</string>
+	<string name="pink">ピンク</string>
 
 </resources>
