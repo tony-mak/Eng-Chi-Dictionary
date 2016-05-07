@@ -7,11 +7,14 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.madeinhk.english_chinesedictionary.SettingFragment;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
 import com.madeinhk.utils.Stemmer;
@@ -40,7 +43,7 @@ public class ClipboardService extends Service {
     }
 
     public static void start(Context context) {
-        context.startService(new Intent(context, ClipboardService.class));
+        context.startService(new Intent(context.getApplicationContext(), ClipboardService.class));
     }
 
     @Override
@@ -59,6 +62,10 @@ public class ClipboardService extends Service {
             new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
                 public void onPrimaryClipChanged() {
+                    if (!isFeatureEnabled()) {
+                        return;
+                    }
+
                     final ClipboardManager clipboard =
                             (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData data = clipboard.getPrimaryClip();
@@ -134,5 +141,10 @@ public class ClipboardService extends Service {
                     (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             clipboardManager.removePrimaryClipChangedListener(mClipListener);
         }
+    }
+
+    private boolean isFeatureEnabled() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getBoolean(SettingFragment.KEY_COPY_TO_LOOKUP, true);
     }
 }

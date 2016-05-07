@@ -28,7 +28,7 @@
 
         <item
             android:id="@+id/settings"
-            android:icon="@drawable/ic_settings_grey_24"
+            android:icon="@drawable/ic_settings_24dp"
             android:title="Settings"/>
 
         <item
