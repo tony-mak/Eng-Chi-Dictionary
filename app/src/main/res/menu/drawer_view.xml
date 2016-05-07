@@ -25,6 +25,12 @@
             android:id="@+id/nav_favourite"
             android:icon="@drawable/ic_star_grey600_24dp"
             android:title="@string/favourites"/>
+
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings_grey_24"
+            android:title="Settings"/>
+
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_information_grey600_24dp"

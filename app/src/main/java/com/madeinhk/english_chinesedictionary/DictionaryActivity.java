@@ -45,7 +45,8 @@ public class DictionaryActivity extends AppCompatActivity {
         int EMPTY = -1;
         int DICTIONARY = 0;
         int FAVOURITE = 1;
-        int ABOUT = 2;
+        int SETTINGS = 2;
+        int ABOUT = 3;
     }
 
     private static final String TAG = "DictionaryActivity";
@@ -222,6 +223,9 @@ public class DictionaryActivity extends AppCompatActivity {
                                 fragment = new AboutFragment();
                                 position = PagePos.ABOUT;
                                 break;
+                            case R.id.settings:
+                                fragment = new SettingFragment();
+                                position = PagePos.SETTINGS;
                         }
                         if (mCurrentPage != position) {
                             showFragment(fragment, position);
