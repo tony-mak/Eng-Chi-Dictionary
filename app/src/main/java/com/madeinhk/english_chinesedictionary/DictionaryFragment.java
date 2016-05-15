@@ -31,6 +31,7 @@ import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Favourite;
 import com.madeinhk.model.Word;
+import com.madeinhk.utils.Analytics;
 import com.madeinhk.view.LevelIndicator;
 
 import java.util.List;
@@ -247,7 +248,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     }
 
 
-    private void executeQueryTask(String query) {
+    private void executeQueryTask(final String query) {
         new AsyncTask<String, Void, Word>() {
             @Override
             protected Word doInBackground(String... params) {
@@ -258,7 +259,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             @Override
             protected void onPostExecute(Word word) {
                 if (isAdded()) {
-                    buildHtmlFromDictionary(word);
+                    buildHtmlFromDictionary(query, word);
                 }
             }
         }.execute(query);
@@ -300,10 +301,11 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     final static int INDENTATION_MEANING_LEFT = 50;
     final static int INDENTATION_EXAMPLE_LEFT = 130;
 
-    private void buildHtmlFromDictionary(Word word) {
+    private void buildHtmlFromDictionary(String query, Word word) {
         mWord = word;
         updateFavFab(word);
         if (word != null) {
+            Analytics.trackFoundWord(getActivity(), word.mWord);
             mWordTextView.setText(word.mWord);
 
             if (!TextUtils.isEmpty(mWord.mPhoneticString)) {
@@ -348,6 +350,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             mPhoneticTextView.setVisibility(View.VISIBLE);
             AppPreference.saveLastWord(mContext, word.mWord);
         } else {
+            Analytics.trackNotFoundWord(getActivity(), query);
             mWordTextView.setText("No such word :(");
             mCommonnessBar.setVisibility(View.GONE);
             mDetailTextView.setText("");

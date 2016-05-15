@@ -15,8 +15,8 @@
         android:layout_weight="1"
         android:textColor="#FFFFFF"
         android:shadowColor="#BB000000"
-        android:fontFamily="sans-serif-condensed"
         android:shadowRadius="2.75"
+        android:textSize="14sp"
         tools:ignore="UnusedAttribute" />
 
     <View

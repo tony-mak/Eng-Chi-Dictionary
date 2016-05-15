@@ -3,5 +3,5 @@
     <dimen name="left_right_padding">16dp</dimen>
     <dimen name="ui_spacing">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-
+    <dimen name="design_navigation_separator_vertical_padding">0dp</dimen>
 </resources>

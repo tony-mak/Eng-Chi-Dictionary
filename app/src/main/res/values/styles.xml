@@ -20,4 +20,9 @@
         <item name="levels">@array/levels</item>
         <item name="android:minHeight">20dip</item>
     </style>
+
+    <style name="NavigationViewStyle">
+        <item name="android:textSize">20sp</item> <!-- menu item text size-->
+        <item name="android:listPreferredItemHeightSmall">40dp</item><!-- menu item height-->
+    </style>
 </resources>

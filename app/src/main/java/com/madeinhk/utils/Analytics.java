@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.english_chinesedictionary.DictionaryApplication;
+import com.madeinhk.model.Word;
 
 /**
  * Created by tonymak on 29/12/14.
@@ -29,5 +30,23 @@ public class Analytics {
     public static void trackPopup(Context context) {
         Tracker tracker = getTracker(context);
         track(tracker, "popup");
+    }
+
+    public static void trackFoundWord(Context context, String word) {
+        Tracker tracker = getTracker(context);
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("lookup")
+                .setAction("found")
+                .setLabel(word)
+                .build());
+    }
+
+    public static void trackNotFoundWord(Context context, String word) {
+        Tracker tracker = getTracker(context);
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("lookup")
+                .setAction("not_found")
+                .setLabel(word)
+                .build());
     }
 }
