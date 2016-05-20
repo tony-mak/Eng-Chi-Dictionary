@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
         <item name="LevelIndicatorStyle">@style/LevelIndicatorStyle</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="AppTheme" parent="Theme.Base"></style>
