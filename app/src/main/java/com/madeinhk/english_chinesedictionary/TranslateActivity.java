@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.madeinhk.english_chinesedictionary.service.DictionaryHeadService;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.model.Word;
+import com.madeinhk.utils.Analytics;
 import com.madeinhk.utils.Stemmer;
 import com.madeinhk.utils.StringUtils;
 
@@ -45,7 +46,10 @@ public class TranslateActivity extends Activity {
                     word = dictionary.lookup(stemmer.toString());
                 }
                 if (word != null) {
+                    Analytics.trackFoundWord(this, word.mWord);
                     DictionaryHeadService.show(this, word);
+                } else {
+                    Analytics.trackNotFoundWord(this, query);
                 }
             }
         }
