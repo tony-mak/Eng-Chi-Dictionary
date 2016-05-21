@@ -74,6 +74,7 @@ public class ECDictionary {
         if (word == null) {
             return null;
         }
+        word = word.trim();
         Word wordRet = null;
         try {
             Uri uri = sEngToChiUri.buildUpon().appendPath(word).build();
