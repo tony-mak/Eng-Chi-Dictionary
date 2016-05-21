@@ -383,7 +383,9 @@ public class DictionaryActivity extends AppCompatActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content, fragment, null);
             ft.commit();
-            selectDrawerItem(fragmentToPos(fragment));
+            int page = fragmentToPos(fragment);
+            mCurrentPage = page;
+            selectDrawerItem(page);
         }
     }
 
