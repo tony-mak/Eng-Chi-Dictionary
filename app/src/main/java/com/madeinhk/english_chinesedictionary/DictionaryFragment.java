@@ -252,7 +252,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         new AsyncTask<String, Void, Word>() {
             @Override
             protected Word doInBackground(String... params) {
-                String query = params[0].trim();
+                String query = params[0];
                 return mECDictionary.lookup(query);
             }
 
