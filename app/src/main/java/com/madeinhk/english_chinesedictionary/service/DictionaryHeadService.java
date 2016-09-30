@@ -105,9 +105,9 @@ public class DictionaryHeadService extends Service {
                         case MotionEvent.ACTION_CANCEL:
                             mAlwaysInTapRegion = false;
                         case MotionEvent.ACTION_MOVE:
-                            final int deltaX = (int) (event.getX() - initialX);
-                            final int deltaY = (int) (event.getY() - initialY);
-                            int distance = (deltaX * deltaX) + (deltaY * deltaY);
+                            final int deltaX = (int) (event.getX() - initialTouchX);
+                            final int deltaY = (int) (event.getY() - initialTouchY);
+                            final int distance = (deltaX * deltaX) + (deltaY * deltaY);
                             if (distance > mTouchSlopSquare) {
                                 mAlwaysInTapRegion = false;
                             }
