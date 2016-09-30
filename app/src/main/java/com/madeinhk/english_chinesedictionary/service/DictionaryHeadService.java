@@ -61,13 +61,13 @@ public class DictionaryHeadService extends Service {
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                     PixelFormat.TRANSLUCENT);
             params.windowAnimations = android.R.style.Animation_Toast;
             params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             params.x = 0;
             params.y = 100;
-
             mWindowManager.addView(mDictionaryHead, params);
 
             mDictionaryHead.setOnTouchListener(new View.OnTouchListener() {
@@ -105,8 +105,8 @@ public class DictionaryHeadService extends Service {
                         case MotionEvent.ACTION_CANCEL:
                             mAlwaysInTapRegion = false;
                         case MotionEvent.ACTION_MOVE:
-                            final int deltaX = (int) (event.getX() - initialTouchX);
-                            final int deltaY = (int) (event.getY() - initialTouchY);
+                            final int deltaX = (int) (event.getRawX() - initialTouchX);
+                            final int deltaY = (int) (event.getRawY() - initialTouchY);
                             final int distance = (deltaX * deltaX) + (deltaY * deltaY);
                             if (distance > mTouchSlopSquare) {
                                 mAlwaysInTapRegion = false;
