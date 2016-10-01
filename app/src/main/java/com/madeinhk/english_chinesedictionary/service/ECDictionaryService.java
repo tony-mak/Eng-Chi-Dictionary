@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.RemoteInput;
-import android.support.v4.os.BuildCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,7 +47,7 @@ public class ECDictionaryService extends Service {
 
     public void onCreate() {
         Log.d(TAG, "onCreate: " + mRegistered);
-        if (BuildCompat.isAtLeastN()) {
+        if (isQuickLookupEnabled()) {
             mQuickLookHelper = new QuickLookupNotificationHelper(this);
             startForeground();
         }
@@ -75,7 +74,7 @@ public class ECDictionaryService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            if (BuildCompat.isAtLeastN() && ACTION_QUICK_LOOKUP.equals(intent.getAction())) {
+            if (isQuickLookupEnabled() && ACTION_QUICK_LOOKUP.equals(intent.getAction())) {
                 String text = getMessageText(intent);
                 if (text != null) {
                     text = text.trim();
@@ -108,7 +107,7 @@ public class ECDictionaryService extends Service {
             new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
                 public void onPrimaryClipChanged() {
-                    if (!isFeatureEnabled()) {
+                    if (!isCopyToLookupEnabled()) {
                         return;
                     }
 
@@ -200,9 +199,14 @@ public class ECDictionaryService extends Service {
         return null;
     }
 
-    private boolean isFeatureEnabled() {
+    private boolean isCopyToLookupEnabled() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         return preferences.getBoolean(SettingFragment.KEY_COPY_TO_LOOKUP, true);
+    }
+
+    private boolean isQuickLookupEnabled() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getBoolean(SettingFragment.KEY_QUICK_LOOKUP, true);
     }
 
     private String getMessageText(Intent intent) {

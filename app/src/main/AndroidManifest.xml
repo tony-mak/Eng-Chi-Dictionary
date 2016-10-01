@@ -39,6 +39,7 @@
 
         <provider
             android:name="com.madeinhk.model.DictionaryContentProvider"
+            android:process=":background"
             android:authorities="com.madeinhk.dictionary"
             android:exported="false"/>
 
@@ -49,6 +50,7 @@
 
         <receiver
             android:name="com.madeinhk.BootReceiver"
+            android:process=":background"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
