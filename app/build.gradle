@@ -32,15 +32,13 @@ android {
         applicationId "com.madeinhk.english_chinesedictionary"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 28
-        versionName "0.7.0"
-        jackOptions {
-            enabled true
-        }
+        versionCode 29
+        versionName "0.7.1"
     }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFile 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -49,8 +47,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     lintOptions {

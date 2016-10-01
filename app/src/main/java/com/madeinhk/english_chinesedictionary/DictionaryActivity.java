@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -58,8 +59,8 @@ public class DictionaryActivity extends AppCompatActivity {
     private static final String KEY_CURRENT_PAGE = "current_page";
     private static final String KEY_EXPANDED_SEARCH_VIEW = "expanded_search_view";
 
-    private static final int[] ITEM_NAMES = new int[]{R.string.dictionary, R.string.favourites, R
-            .string.about};
+    private static final int[] ITEM_NAMES = new int[]{R.string.dictionary, R.string.favourites,
+            R.string.settings, R.string.about};
     private DrawerLayout mDrawerLayout;
     private int mCurrentPage = PagePos.EMPTY;
 
@@ -208,32 +209,35 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                menuItem -> {
-                    menuItem.setChecked(true);
-                    mDrawerLayout.closeDrawers();
-                    Fragment fragment = null;
-                    int position = PagePos.EMPTY;
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_dictionary:
-                            fragment = DictionaryFragment.newInstance(null);
-                            position = PagePos.DICTIONARY;
-                            break;
-                        case R.id.nav_favourite:
-                            fragment = FavouriteFragment.newInstance();
-                            position = PagePos.FAVOURITE;
-                            break;
-                        case R.id.nav_about:
-                            fragment = new AboutFragment();
-                            position = PagePos.ABOUT;
-                            break;
-                        case R.id.settings:
-                            fragment = new SettingFragment();
-                            position = PagePos.SETTINGS;
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        Fragment fragment = null;
+                        int position = PagePos.EMPTY;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_dictionary:
+                                fragment = DictionaryFragment.newInstance(null);
+                                position = PagePos.DICTIONARY;
+                                break;
+                            case R.id.nav_favourite:
+                                fragment = FavouriteFragment.newInstance();
+                                position = PagePos.FAVOURITE;
+                                break;
+                            case R.id.nav_about:
+                                fragment = new AboutFragment();
+                                position = PagePos.ABOUT;
+                                break;
+                            case R.id.settings:
+                                fragment = new SettingFragment();
+                                position = PagePos.SETTINGS;
+                        }
+                        if (mCurrentPage != position) {
+                            showFragment(fragment, position);
+                        }
+                        return true;
                     }
-                    if (mCurrentPage != position) {
-                        showFragment(fragment, position);
-                    }
-                    return true;
                 });
     }
 
