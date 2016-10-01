@@ -74,25 +74,27 @@ public class ECDictionaryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (BuildCompat.isAtLeastN() && ACTION_QUICK_LOOKUP.equals(intent.getAction())) {
-            String text = getMessageText(intent);
-            if (text != null) {
-                text = text.trim();
-            }
-            Word word = lookupWord(text);
-            Notification notification = mQuickLookHelper.buildNotificationForResult(word);
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(NOTIFICATION_ID, notification);
-        } else if (ACTION_CHANGE_FOREGROUND.equals(intent.getAction())) {
-            boolean isForeground = intent.getBooleanExtra(KEY_IS_FOREGROUND, true);
-            if (isForeground) {
-                startForeground();
-            } else {
-                stopForeground(true);
-                stopSelf();
-            }
+        if (intent != null) {
+            if (BuildCompat.isAtLeastN() && ACTION_QUICK_LOOKUP.equals(intent.getAction())) {
+                String text = getMessageText(intent);
+                if (text != null) {
+                    text = text.trim();
+                }
+                Word word = lookupWord(text);
+                Notification notification = mQuickLookHelper.buildNotificationForResult(word);
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(NOTIFICATION_ID, notification);
+            } else if (ACTION_CHANGE_FOREGROUND.equals(intent.getAction())) {
+                boolean isForeground = intent.getBooleanExtra(KEY_IS_FOREGROUND, true);
+                if (isForeground) {
+                    startForeground();
+                } else {
+                    stopForeground(true);
+                    stopSelf();
+                }
 
+            }
         }
         return START_STICKY;
     }

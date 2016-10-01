@@ -37,6 +37,7 @@ public class QuickLookupNotificationHelper {
         builder.setSmallIcon(R.drawable.lookup_notification_drawable)
                 .setContentTitle(mContext.getString(R.string.quick_lookup_notification_title))
                 .setOngoing(true)
+                .setWhen(0)
                 .setDefaults(0)  // please be quiet
                 .setColor(mContext.getColor(R.color.colorPrimaryDark))
                 .setVisibility(Notification.VISIBILITY_PUBLIC);
