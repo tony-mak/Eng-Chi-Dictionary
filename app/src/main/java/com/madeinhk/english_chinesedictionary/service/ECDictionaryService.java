@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.RemoteInput;
+import android.support.v4.os.BuildCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -206,7 +207,8 @@ public class ECDictionaryService extends Service {
 
     private boolean isQuickLookupEnabled() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return preferences.getBoolean(SettingFragment.KEY_QUICK_LOOKUP, true);
+        return BuildCompat.isAtLeastN() && preferences.getBoolean(SettingFragment.KEY_QUICK_LOOKUP,
+                true);
     }
 
     private String getMessageText(Intent intent) {
