@@ -47,8 +47,8 @@ public class ECDictionaryService extends Service {
 
     public void onCreate() {
         Log.d(TAG, "onCreate: " + mRegistered);
+        mQuickLookHelper = new QuickLookupNotificationHelper(this);
         if (isQuickLookupEnabled()) {
-            mQuickLookHelper = new QuickLookupNotificationHelper(this);
             startForeground();
         }
         synchronized (mClipListener) {
