@@ -44,10 +44,8 @@ public class QuickLookupNotificationHelper {
         if (showResult) {
             String response = mContext.getString(R.string.quick_lookup_notification_not_found);
             if (result != null) {
-                response = result.buildMeaningSummary();
+                response = String.format("%s %s", result.mWord, result.buildMeaningSummary());
             }
-            response = String.format("%s %s", result.mWord, response);
-
             builder.setRemoteInputHistory(new String[]{response});
         }
         String replyLabel = mContext.getString(R.string.quick_lookup_notification_reply_label);
