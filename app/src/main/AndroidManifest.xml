@@ -44,6 +44,7 @@
 
         <service
             android:name=".service.ECDictionaryService"
+            android:process=":background"
             android:exported="false"/>
 
         <receiver

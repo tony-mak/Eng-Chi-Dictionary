@@ -151,7 +151,7 @@
     <color name="primary_pressed">#303f9f</color>
     <color name="ripple">#ff80ab</color>
     <color name="colorPrimary">#D32F2F</color>
-    <color name="colorPrimaryDark">#F44336</color>
+    <color name="colorPrimaryDark">#B71C1C</color>
     <color name="colorPrimaryLight">#FFCDD2</color>
     <color name="colorAccent">#448AFF</color>
     <color name="activated_color">#E8E8E8</color>
