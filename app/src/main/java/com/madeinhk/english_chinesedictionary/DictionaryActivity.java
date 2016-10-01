@@ -26,7 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.madeinhk.app.AboutFragment;
-import com.madeinhk.english_chinesedictionary.service.ClipboardService;
+import com.madeinhk.english_chinesedictionary.service.ECDictionaryService;
 import com.madeinhk.model.AppPreference;
 import com.madeinhk.model.ECDictionary;
 import com.madeinhk.utils.Analytics;
@@ -34,6 +34,8 @@ import com.madeinhk.utils.Analytics;
 import java.util.Stack;
 
 import de.greenrobot.event.EventBus;
+
+import static com.madeinhk.english_chinesedictionary.R.id.word;
 
 
 public class DictionaryActivity extends AppCompatActivity {
@@ -51,6 +53,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private static final String TAG = "DictionaryActivity";
     public static final String ACTION_VIEW_WORD = "android.intent.action.VIEW_WORD";
+    public static final String ACTION_SETTINGS = "android.intent.action.SETTINGS";
 
     private static final String KEY_CURRENT_PAGE = "current_page";
     private static final String KEY_EXPANDED_SEARCH_VIEW = "expanded_search_view";
@@ -83,7 +86,7 @@ public class DictionaryActivity extends AppCompatActivity {
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(mNavigationView);
 
-        ClipboardService.start(this);
+        ECDictionaryService.start(this);
 
         if (savedInstanceState == null) {
             handleIntent(getIntent());
@@ -164,6 +167,8 @@ public class DictionaryActivity extends AppCompatActivity {
                 return R.id.nav_dictionary;
             case PagePos.FAVOURITE:
                 return R.id.nav_favourite;
+            case PagePos.SETTINGS:
+                return R.id.settings;
             case PagePos.ABOUT:
                 return R.id.nav_about;
         }
@@ -203,35 +208,32 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        Fragment fragment = null;
-                        int position = PagePos.EMPTY;
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_dictionary:
-                                fragment = DictionaryFragment.newInstance(null);
-                                position = PagePos.DICTIONARY;
-                                break;
-                            case R.id.nav_favourite:
-                                fragment = FavouriteFragment.newInstance();
-                                position = PagePos.FAVOURITE;
-                                break;
-                            case R.id.nav_about:
-                                fragment = new AboutFragment();
-                                position = PagePos.ABOUT;
-                                break;
-                            case R.id.settings:
-                                fragment = new SettingFragment();
-                                position = PagePos.SETTINGS;
-                        }
-                        if (mCurrentPage != position) {
-                            showFragment(fragment, position);
-                        }
-                        return true;
+                menuItem -> {
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
+                    Fragment fragment = null;
+                    int position = PagePos.EMPTY;
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_dictionary:
+                            fragment = DictionaryFragment.newInstance(null);
+                            position = PagePos.DICTIONARY;
+                            break;
+                        case R.id.nav_favourite:
+                            fragment = FavouriteFragment.newInstance();
+                            position = PagePos.FAVOURITE;
+                            break;
+                        case R.id.nav_about:
+                            fragment = new AboutFragment();
+                            position = PagePos.ABOUT;
+                            break;
+                        case R.id.settings:
+                            fragment = new SettingFragment();
+                            position = PagePos.SETTINGS;
                     }
+                    if (mCurrentPage != position) {
+                        showFragment(fragment, position);
+                    }
+                    return true;
                 });
     }
 
@@ -326,16 +328,22 @@ public class DictionaryActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        String word = null;
         if (Intent.ACTION_SEARCH.equals(intent.getAction()) || ("com.google.android.gms.actions" +
                 ".SEARCH_ACTION").equals(intent.getAction())) {
-            word = intent.getStringExtra(SearchManager.QUERY);
+            String word = intent.getStringExtra(SearchManager.QUERY);
+            showWord(word);
         } else if (ACTION_VIEW_WORD.equals(intent.getAction())) {
             Uri data = intent.getData();
             ECDictionary ecDictionary = new ECDictionary(this);
-            word = ecDictionary.lookupFromId(data.getLastPathSegment()).mWord;
+            String word = ecDictionary.lookupFromId(data.getLastPathSegment()).mWord;
+            showWord(word);
+        } else if (ACTION_SETTINGS.equals(intent.getAction())) {
+            Fragment fragment = new SettingFragment();
+            showFragment(fragment, PagePos.SETTINGS);
+            selectDrawerItem(PagePos.SETTINGS);
+        } else {
+            showWord(null);
         }
-        showWord(word);
     }
 
     private void showWord(String word) {

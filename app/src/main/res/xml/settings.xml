@@ -6,5 +6,10 @@
         android:key="copy_lookup"
         android:title="@string/copy_lookup_word"
         />
-
+    <android.support.v7.preference.SwitchPreferenceCompat
+            android:id="@+id/quick_lookup"
+            android:defaultValue="true"
+            android:key="quick_lookup"
+            android:title="@string/quick_lookup_in_notification"
+            android:summary="@string/quick_lookup_in_notification_summary"/>
 </PreferenceScreen>

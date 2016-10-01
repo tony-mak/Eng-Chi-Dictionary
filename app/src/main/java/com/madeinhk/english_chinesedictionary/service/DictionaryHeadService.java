@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -141,14 +140,11 @@ public class DictionaryHeadService extends Service {
         boolean alreadyMarked = favourite.isExists(this);
         mFavButton.setChecked(alreadyMarked);
 
-        mFavButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    favourite.save(DictionaryHeadService.this);
-                } else {
-                    favourite.delete(DictionaryHeadService.this);
-                }
+        mFavButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                favourite.save(DictionaryHeadService.this);
+            } else {
+                favourite.delete(DictionaryHeadService.this);
             }
         });
         restartDismissTimer();
@@ -164,12 +160,7 @@ public class DictionaryHeadService extends Service {
 
     private void restartDismissTimer() {
         mHandler.removeCallbacksAndMessages(null);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopSelf();
-            }
-        }, 5000);
+        mHandler.postDelayed(() -> stopSelf(), 5000);
     }
 
     private void removeView() {

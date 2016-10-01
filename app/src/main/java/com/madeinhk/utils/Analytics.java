@@ -5,7 +5,6 @@ import android.content.Context;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.english_chinesedictionary.DictionaryApplication;
-import com.madeinhk.model.Word;
 
 /**
  * Created by tonymak on 29/12/14.
@@ -19,7 +18,7 @@ public class Analytics {
 
     private static void track(Tracker tracker, String screenName) {
         tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.AppViewBuilder().build());
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public static void trackAppLaunch(Context context) {

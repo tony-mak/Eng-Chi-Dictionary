@@ -104,7 +104,7 @@ ADDED from AndroidManifest.xml:40:9
 		ADDED from AndroidManifest.xml:43:13
 	android:name
 		ADDED from AndroidManifest.xml:41:13
-service#com.madeinhk.english_chinesedictionary.service.ClipboardService
+service#com.madeinhk.english_chinesedictionary.service.ECDictionaryService
 ADDED from AndroidManifest.xml:45:9
 	android:exported
 		ADDED from AndroidManifest.xml:47:13

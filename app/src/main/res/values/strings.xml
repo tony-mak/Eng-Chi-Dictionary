@@ -29,4 +29,11 @@
     <string name="very_rare_word">A rare word.</string>
     <string name="word_frequency">Word frequency:</string>
     <string name="copy_lookup_word">Copy to lookup word</string>
+    <string name="quick_lookup_in_notification">Quick lookup in notification</string>
+    <string name="quick_lookup_in_notification_summary">Available to android 7.0+</string>
+    <string name="quick_lookup_notification_title">Lookup a word</string>
+    <string name="quick_lookup_notification_reply_label">Enter a word here</string>
+    <string name="quick_lookup_notification_action">Lookup</string>
+    <string name="setting_notification_action">Settings</string>
+    <string name="quick_lookup_notification_not_found">Not found in dictionary</string>
 </resources>
