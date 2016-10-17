@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
@@ -45,6 +44,10 @@ public class QuickLookupNotificationHelper {
             String response = mContext.getString(R.string.quick_lookup_notification_not_found);
             if (result != null) {
                 response = String.format("%s %s", result.mWord, result.buildMeaningSummary());
+                PendingIntent clickIntent =
+                        PendingIntent.getActivity(mContext, 0, buildClickIntent(result),
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(clickIntent);
             }
             builder.setRemoteInputHistory(new String[]{response});
         }
@@ -74,6 +77,13 @@ public class QuickLookupNotificationHelper {
     private Intent getSettingsIntent() {
         Intent intent = new Intent(mContext, DictionaryActivity.class);
         intent.setAction(DictionaryActivity.ACTION_SETTINGS);
+        return intent;
+    }
+
+    private Intent buildClickIntent(Word word) {
+        Intent intent = DictionaryActivity
+                .getIntent(mContext, word.mWord);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 }

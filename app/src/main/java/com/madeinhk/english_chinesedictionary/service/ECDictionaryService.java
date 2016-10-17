@@ -91,9 +91,7 @@ public class ECDictionaryService extends Service {
                     startForeground();
                 } else {
                     stopForeground(true);
-                    stopSelf();
                 }
-
             }
         }
         return START_STICKY;

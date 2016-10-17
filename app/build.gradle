@@ -14,8 +14,6 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-
-
 android {
     sourceSets.main.jni.srcDirs = []
     signingConfigs {
