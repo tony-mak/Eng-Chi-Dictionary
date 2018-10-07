@@ -1,13 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:custom="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".DictionaryActivity"
-    >
+      tools:context=".DictionaryActivity">
 
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search"
         android:title="Search"
-        custom:actionViewClass="android.support.v7.widget.SearchView"
-        custom:showAsAction="collapseActionView|ifRoom"/>
+        custom:actionViewClass="androidx.appcompat.widget.SearchView"
+        custom:showAsAction="collapseActionView|always"/>
 </menu>

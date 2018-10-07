@@ -8,11 +8,11 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -385,7 +385,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         if (TextUtils.isEmpty(word)) {
             word = AppPreference.getKeyLastWord(mContext);
         }
-        if (!word.equals(mWord)) {
+        if (!word.equals(mWord.mWord)) {
             executeQueryTask(word);
         }
     }

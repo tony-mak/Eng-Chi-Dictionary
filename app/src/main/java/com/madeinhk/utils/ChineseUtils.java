@@ -1,7 +1,7 @@
 package com.madeinhk.utils;
 
 import android.os.SystemClock;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
 

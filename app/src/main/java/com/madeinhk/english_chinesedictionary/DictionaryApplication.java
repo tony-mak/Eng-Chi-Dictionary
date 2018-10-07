@@ -2,15 +2,12 @@ package com.madeinhk.english_chinesedictionary;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.ExceptionReporter;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.madeinhk.utils.DatabaseMigrationUtil;
-import com.madeinhk.utils.Obfuscator;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -20,7 +17,6 @@ public class DictionaryApplication extends Application {
     private Tracker mTracker;
     private static final String DEV_GA = "UA-51112217-4";
     private static final String GA = "UA-51112217-3";
-
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -36,7 +32,10 @@ public class DictionaryApplication extends Application {
     }
 
     private void setupCrashlytics() {
-        Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
+        CrashlyticsCore crashlytics =
+                new CrashlyticsCore.Builder()
+                        .disabled(BuildConfig.DEBUG)
+                        .build();
         Fabric.with(this, crashlytics);
     }
 

@@ -16,20 +16,12 @@ repositories {
 
 android {
     sourceSets.main.jni.srcDirs = []
-    signingConfigs {
-        release {
-            keyAlias 'madeinhk'
-            keyPassword 'madeinhk'
-            storeFile file('/Users/tonymak/Downloads/madeinhk')
-            storePassword 'madeinhk'
-        }
-    }
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "com.madeinhk.english_chinesedictionary"
-        minSdkVersion 16
-        targetSdkVersion 24
+        minSdkVersion 23
+        targetSdkVersion 28
         versionCode 31
         versionName "0.7.3"
     }
@@ -38,10 +30,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFile 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-        debug {
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -55,19 +43,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:preference-v14:24+'
-    compile 'com.android.support:appcompat-v7:24+'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.android.support:recyclerview-v7:24+'
-    compile 'com.android.support:cardview-v7:24+'
-    compile 'com.google.android.gms:play-services-analytics:+'
-    compile project(':sqlite-assest-helper')
-    compile 'com.android.support:recyclerview-v7:24+'
-    compile 'com.android.support:design:24+'
-    compile 'com.android.support:support-compat:24+'
-    compile 'org.jsoup:jsoup:+'
-    compile('com.crashlytics.sdk.android:crashlytics:2.3.2@aar') {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api 'androidx.legacy:legacy-preference-v14:1.0.0'
+    api 'androidx.appcompat:appcompat:1.0.2'
+    api 'androidx.annotation:annotation:1.0.1'
+    api 'de.greenrobot:eventbus:2.4.0'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'com.google.android.gms:play-services-analytics:16.0.6'
+    api project(':sqlite-assest-helper')
+    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
+    api 'androidx.core:core:1.0.1'
+    api('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
         transitive = true;
     }
 }

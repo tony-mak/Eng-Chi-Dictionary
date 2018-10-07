@@ -4,11 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.madeinhk.utils.ChineseUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class Word implements Parcelable {
 
     public static Word fromLookupResult(LookupResult lookupResult) {
         String vocab = lookupResult.getWord();
-        Crashlytics.log("fromLookupResult: " + vocab);
+        CrashlyticsCore.getInstance().log("fromLookupResult: " + vocab);
         String mPhoneticString = lookupResult.getPhoneticString();
         String meaningString = ChineseUtils.convertChineseIfNeeded(lookupResult.getMeaning());
         String exampleString = ChineseUtils.convertChineseIfNeeded(lookupResult.getExample());

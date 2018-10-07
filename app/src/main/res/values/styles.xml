@@ -1,20 +1,11 @@
 <resources>
 
     <!-- extend one of the Theme.AppCompat themes -->
-    <style name="Theme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- customize the color palette -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:activatedBackgroundIndicator">@drawable/activated_background</item>
         <item name="LevelIndicatorStyle">@style/LevelIndicatorStyle</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-    <style name="AppTheme" parent="Theme.Base"></style>
-
-    <style name="nav_drawer_list_item_text">
-        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="LevelIndicatorStyle">

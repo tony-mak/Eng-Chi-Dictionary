@@ -1,4 +1,5 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
@@ -16,8 +17,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/left_right_padding"
-            android:paddingRight="@dimen/left_right_padding"
-            android:paddingTop="@dimen/ui_spacing">
+            android:paddingTop="@dimen/ui_spacing"
+            android:paddingRight="@dimen/left_right_padding">
 
             <TextView
                 android:id="@+id/word"
@@ -25,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/primary_text_default_material_light"
-                android:textSize="@dimen/abc_text_size_headline_material" />
+                android:textSize="@dimen/abc_text_size_headline_material"/>
 
 
             <ImageButton
@@ -36,7 +37,7 @@
                 android:layout_marginLeft="8dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_volume_high_black_24dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -47,18 +48,18 @@
             android:paddingLeft="@dimen/left_right_padding"
             android:paddingRight="@dimen/left_right_padding"
             android:textColor="#5C6BC0"
-            android:textSize="@dimen/abc_text_size_small_material" />
+            android:textSize="@dimen/abc_text_size_small_material"/>
 
         <com.madeinhk.view.LevelIndicator
             android:id="@+id/commonness_bar"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ui_spacing"
             android:layout_marginTop="@dimen/ui_spacing"
+            android:layout_marginBottom="@dimen/ui_spacing"
             android:minWidth="150dp"
             android:paddingLeft="@dimen/left_right_padding"
             android:paddingRight="@dimen/left_right_padding"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -69,25 +70,24 @@
                 android:id="@+id/detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/ui_spacing"
                 android:paddingLeft="@dimen/left_right_padding"
-                android:paddingRight="@dimen/left_right_padding"
                 android:paddingTop="@dimen/ui_spacing"
+                android:paddingRight="@dimen/left_right_padding"
+                android:paddingBottom="@dimen/ui_spacing"
                 android:textColor="@color/primary_text_default_material_light"
-                android:textSize="@dimen/abc_text_size_medium_material" />
+                android:textSize="@dimen/abc_text_size_medium_material"/>
         </ScrollView>
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fav_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:src="@drawable/ic_favorite_white_48dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal" />
+        app:fabSize="normal"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

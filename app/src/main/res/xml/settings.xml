@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:id="@+id/copy_lookup"
         android:defaultValue="true"
         android:key="copy_lookup"
         android:title="@string/copy_lookup_word"
         />
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
             android:id="@+id/quick_lookup"
             android:defaultValue="true"
             android:key="quick_lookup"

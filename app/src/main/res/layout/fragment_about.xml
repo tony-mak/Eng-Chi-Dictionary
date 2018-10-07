@@ -23,7 +23,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif"
                 android:text="@string/app_name"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold"/>
 
@@ -35,7 +35,7 @@
                 android:layout_marginTop="2dp"
                 android:fontFamily="sans-serif"
                 android:textAllCaps="true"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"/>
 
             <ImageView
@@ -52,9 +52,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Contact Us"
-                android:textColor="@color/colorAccent"
+                android:textColor="@android:color/white"
                 android:textSize="14sp"
-                />
+            />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

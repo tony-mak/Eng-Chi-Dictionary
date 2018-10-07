@@ -1,22 +1,26 @@
 package com.madeinhk.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 
-import com.madeinhk.english_chinesedictionary.R;
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.core.view.ViewCompat;
 
+import com.madeinhk.english_chinesedictionary.R;
 
 public class LevelIndicator extends View {
     private int[] mColors = new int[0];
     private int mLevel = 0;
-    private  int mBorderColor;
+    private int mBorderColor;
+    private int mBorderWidth;
 
     public LevelIndicator(Context context) {
         this(context, null);
@@ -35,11 +39,12 @@ public class LevelIndicator extends View {
             if (id != 0) {
                 final int[] colors = a.getResources().getIntArray(id);
                 mColors = colors;
-                mBorderColor = getResources().getColor(R.color.colorPrimary);
+                mBorderColor = getColorInt(context, R.attr.colorPrimaryDark);
             }
         } finally {
             a.recycle();
         }
+        mBorderWidth = getResources().getDimensionPixelSize(R.dimen.level_indicator_stroke_width);
     }
 
     public void setLevel(int level) {
@@ -62,33 +67,45 @@ public class LevelIndicator extends View {
     }
 
     protected void onDraw(Canvas canvas) {
-        if (mColors != null) {
-            final int numberOfLevel = mColors.length;
-            final int widgetWidth = getWidth() - ViewCompat.getPaddingStart(this) - ViewCompat
-                    .getPaddingEnd(this);
-            final int widgetHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-            final int levelWidth = widgetWidth / numberOfLevel;
-            Rect progressRect = new Rect();
-            Paint progressPaint = new Paint();
-            for (int i = 0; i < numberOfLevel; i++) {
-                progressPaint.setStyle(Paint.Style.FILL);
-                progressPaint.setColor(mColors[i]);
-
-                final int levelLeftOffset = ViewCompat.getPaddingStart(this) + levelWidth * i;
-                final int levelRightOffset = (i < numberOfLevel - 1) ? levelLeftOffset +
-                        levelWidth : widgetWidth + ViewCompat.getPaddingEnd(this);
-
-                progressRect.set(levelLeftOffset, getPaddingTop(),
-                        levelRightOffset, widgetHeight);
-                if (i <= mLevel) {
-                    canvas.drawRect(progressRect, progressPaint);
-                }
-                progressPaint.setStyle(Paint.Style.STROKE);
-                progressPaint.setColor(mBorderColor);
+        if (mColors == null) {
+            return;
+        }
+        final int numberOfLevel = mColors.length;
+        final int widgetWidth = getWidth() - ViewCompat.getPaddingStart(this)
+                - ViewCompat.getPaddingEnd(this);
+        final int widgetHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+        final int levelWidth = (widgetWidth - 2 * mBorderWidth) / numberOfLevel;
+        Rect progressRect = new Rect();
+        Paint progressPaint = new Paint();
+        for (int i = 0; i < numberOfLevel; i++) {
+            progressPaint.setStyle(Paint.Style.FILL);
+            progressPaint.setColor(mColors[i]);
+            progressPaint.setStrokeWidth(mBorderWidth);
+            final int levelLeftOffset =
+                    (int) (ViewCompat.getPaddingStart(this) + levelWidth * i
+                            + progressPaint.getStrokeWidth());
+            final int levelRightOffset = levelLeftOffset + levelWidth;
+            progressRect.set(levelLeftOffset,
+                    (int) (getPaddingTop() + progressPaint.getStrokeWidth()),
+                    levelRightOffset, (int) (widgetHeight - progressPaint.getStrokeWidth()));
+            if (i <= mLevel) {
                 canvas.drawRect(progressRect, progressPaint);
             }
+            progressPaint.setStyle(Paint.Style.STROKE);
+            progressPaint.setColor(mBorderColor);
+            canvas.drawRect(progressRect, progressPaint);
         }
     }
 
-
+    @ColorInt
+    public static int getColorInt(Context context, @AttrRes int resId) {
+        TypedValue colorValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        if (theme.resolveAttribute(resId, colorValue, /* resolveRefs= */ true)
+                && TypedValue.TYPE_FIRST_COLOR_INT <= colorValue.type
+                && colorValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            return colorValue.data;
+        }
+        throw new IllegalArgumentException("Theme is missing expected color " + resId);
+    }
 }

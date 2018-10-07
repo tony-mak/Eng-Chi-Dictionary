@@ -1,6 +1,6 @@
 package com.madeinhk.utils;
 
-import com.madeinhk.utils.arrayset.ArraySet;
+import androidx.collection.ArraySet;
 
 import java.util.Set;
 
