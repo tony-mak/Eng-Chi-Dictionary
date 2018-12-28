@@ -12,6 +12,8 @@ import com.madeinhk.utils.Analytics;
 import com.madeinhk.utils.Stemmer;
 import com.madeinhk.utils.StringUtils;
 
+import java.nio.charset.Charset;
+
 public class TranslateActivity extends Activity {
 
     @Override
@@ -28,31 +30,37 @@ public class TranslateActivity extends Activity {
     private void processIntent(Intent intent) {
         String action = intent.getAction();
 
+        CharSequence text = null;
         if (Intent.ACTION_PROCESS_TEXT.equals(action)) {
             // Text shared with app via Intent
-            CharSequence text = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
-            // Configure visibility of more and replace buttons based on read-only-ness of source text
-            boolean readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false);
-            if (!TextUtils.isEmpty(text)) {
-                String query = text.toString();
-                ECDictionary dictionary = new ECDictionary(TranslateActivity.this);
-                String str = query.toLowerCase();
-                Word word = dictionary.lookup(str);
-                if (word == null && StringUtils.isEnglishWord(str)) {
-                    // Try to have stemming
-                    Stemmer stemmer = new Stemmer();
-                    stemmer.add(str.toCharArray(), str.length());
-                    stemmer.stem();
-                    word = dictionary.lookup(stemmer.toString());
-                }
-                if (word != null) {
-                    Analytics.trackFoundWord(this, word.mWord);
-                    DictionaryHeadService.show(this, word);
-                } else {
-                    Analytics.trackNotFoundWord(this, query);
-                }
-            }
+            text = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
+        }
+        if ("android.intent.action.DEFINE".equals(action)) {
+            text = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
+        }
+        if (!TextUtils.isEmpty(text)) {
+            processText(text);
         }
         finish();
+    }
+
+    private void processText(CharSequence text) {
+        String query = text.toString();
+        ECDictionary dictionary = new ECDictionary(TranslateActivity.this);
+        String str = query.toLowerCase();
+        Word word = dictionary.lookup(str);
+        if (word == null && StringUtils.isEnglishWord(str)) {
+            // Try to have stemming
+            Stemmer stemmer = new Stemmer();
+            stemmer.add(str.toCharArray(), str.length());
+            stemmer.stem();
+            word = dictionary.lookup(stemmer.toString());
+        }
+        if (word != null) {
+            Analytics.trackFoundWord(this, word.mWord);
+            DictionaryHeadService.show(this, word);
+        } else {
+            Analytics.trackNotFoundWord(this, query);
+        }
     }
 }
