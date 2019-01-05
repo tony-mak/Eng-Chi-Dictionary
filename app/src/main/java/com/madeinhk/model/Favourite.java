@@ -17,9 +17,9 @@ public class Favourite {
 
     public static final String TABLE_NAME = "favourite";
 
-    public static interface COLUMNS {
-        public static final String ID = "_id";
-        public static final String WORD = "word";
+    public interface COLUMNS {
+        String ID = "_id";
+        String WORD = "word";
     }
 
 

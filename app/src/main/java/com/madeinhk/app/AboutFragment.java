@@ -25,9 +25,9 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
-        TextView versionTextView = (TextView) rootView.findViewById(R.id.version);
+        TextView versionTextView = rootView.findViewById(R.id.version);
         versionTextView.setText("Version " + getAppVersionString());
-        Button contactButton = (Button) rootView.findViewById(R.id.contact_button);
+        Button contactButton = rootView.findViewById(R.id.contact_button);
         contactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

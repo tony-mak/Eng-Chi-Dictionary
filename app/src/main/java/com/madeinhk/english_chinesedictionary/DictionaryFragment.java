@@ -144,19 +144,19 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dictionary, container, false);
-        mRootView = (CoordinatorLayout) view.findViewById(R.id.rootLayout);
-        mPronounceButton = (ImageButton) view.findViewById(R.id.pronounce);
+        mRootView = view.findViewById(R.id.rootLayout);
+        mPronounceButton = view.findViewById(R.id.pronounce);
 
-        mWordTextView = (TextView) view.findViewById(R.id.word);
-        mPhoneticTextView = (TextView) view.findViewById(R.id.phonetic_string);
-        mDetailTextView = (TextView) view.findViewById(R.id.detail);
+        mWordTextView = view.findViewById(R.id.word);
+        mPhoneticTextView = view.findViewById(R.id.phonetic_string);
+        mDetailTextView = view.findViewById(R.id.detail);
 
         if (sNotoFont == null) {
             sNotoFont = Typeface.createFromAsset(mContext.getAssets(), "NotoSans-Regular.ttf");
         }
         mDetailTextView.setTypeface(sNotoFont);
 
-        mCommonnessBar = (LevelIndicator) view.findViewById(R.id.commonness_bar);
+        mCommonnessBar = view.findViewById(R.id.commonness_bar);
         mCommonnessBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,7 +182,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
             }
         });
 
-        mFavButton = (FloatingActionButton) view.findViewById(R.id.fav_button);
+        mFavButton = view.findViewById(R.id.fav_button);
         mFavButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

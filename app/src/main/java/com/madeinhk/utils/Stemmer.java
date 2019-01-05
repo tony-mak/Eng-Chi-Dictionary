@@ -109,7 +109,7 @@ public class Stemmer
    private final boolean cons(int i)
    {  switch (b[i])
       {  case 'a': case 'e': case 'i': case 'o': case 'u': return false;
-         case 'y': return (i==0) ? true : !cons(i-1);
+         case 'y': return (i == 0) || !cons(i - 1);
          default: return true;
       }
    }
@@ -177,9 +177,8 @@ public class Stemmer
    private final boolean cvc(int i)
    {  if (i < 2 || !cons(i) || cons(i-1) || !cons(i-2)) return false;
       {  int ch = b[i];
-         if (ch == 'w' || ch == 'x' || ch == 'y') return false;
+          return ch != 'w' && ch != 'x' && ch != 'y';
       }
-      return true;
    }
 
    private final boolean ends(String s)

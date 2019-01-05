@@ -54,8 +54,8 @@ public class DictionaryHeadService extends Service {
             LayoutInflater inflate = (LayoutInflater)
                     this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mDictionaryHead = inflate.inflate(R.layout.dictionary_head, null);
-            mTextView = (TextView) mDictionaryHead.findViewById(R.id.message);
-            mFavButton = (ToggleButton) mDictionaryHead.findViewById(R.id.fav_button);
+            mTextView = mDictionaryHead.findViewById(R.id.message);
+            mFavButton = mDictionaryHead.findViewById(R.id.fav_button);
 
             mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams(

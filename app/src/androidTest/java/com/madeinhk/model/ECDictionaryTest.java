@@ -9,12 +9,12 @@ import java.util.List;
 
 public class ECDictionaryTest extends AndroidTestCase {
 
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
 
     }
 
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 

@@ -53,7 +53,7 @@ public class FavouriteFragment extends Fragment {
         mEmptyView = view.findViewById(R.id.empty_view);
 
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        mRecyclerView = view.findViewById(R.id.my_recycler_view);
 
         // use a linear layout manager
         mAdapter = new CardListAdapter(getActivity());
@@ -126,7 +126,7 @@ public class FavouriteFragment extends Fragment {
 
             public ViewHolder(View v) {
                 super(v);
-                mRecycleView = (RecyclerView) v.findViewById(R.id.words_list);
+                mRecycleView = v.findViewById(R.id.words_list);
             }
         }
 
@@ -260,7 +260,7 @@ public class FavouriteFragment extends Fragment {
     }
 
     interface WordSorter {
-        public List<Word> sort(List<Word> words);
+        List<Word> sort(List<Word> words);
     }
 
     static class AlgebraicOrderSorter implements WordSorter {
