@@ -81,7 +81,7 @@ public class DictionaryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://www.youtube.com/watch?v=a5nDV2c04Q4"));
+                    intent.setData(Uri.parse("https://youtu.be/NaqPMAnXcJU"));
                     startActivity(intent);
                 }
             });
