@@ -385,7 +385,7 @@ public class DictionaryFragment extends Fragment implements TextToSpeech.OnInitL
         if (TextUtils.isEmpty(word)) {
             word = AppPreference.getKeyLastWord(mContext);
         }
-        if (!word.equals(mWord.mWord)) {
+        if (mWord == null || !word.equals(mWord.mWord)) {
             executeQueryTask(word);
         }
     }
